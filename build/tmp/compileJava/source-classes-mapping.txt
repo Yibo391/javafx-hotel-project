@@ -1,6 +1,6 @@
 hotelproject/LoginCheck.java
  hotelproject.LoginCheck
-hotelproject/ProjectTest.java
- hotelproject.ProjectTest
 hotelproject/ChangePwd.java
  hotelproject.ChangePwd
+hotelproject/ProjectTest.java
+ hotelproject.ProjectTest

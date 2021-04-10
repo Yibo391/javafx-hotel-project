@@ -37,7 +37,7 @@ public class ProjectTest extends Application {
     pwdBox.setPadding(new Insets(5));
     pwdBox.setSpacing(5);
     Label welcome = new Label("Welcome");
-    welcome.setFont(Font.font("Impact", FontWeight.BOLD, FontPosture.ITALIC,40));
+    welcome.setFont(Font.font("Impact", FontWeight.BOLD, FontPosture.ITALIC, 40));
 
     Label account = new Label("Account:");
     TextField accountInput = new TextField();
@@ -52,18 +52,18 @@ public class ProjectTest extends Application {
     Button changePwd = new Button("Change Password");
     changePwd.setPadding(Insets.EMPTY);
     changePwd.setTextFill(Color.BLUE);
-    sign.getChildren().addAll(login,changePwd);
+    sign.getChildren().addAll(login, changePwd);
     Label tip = new Label(); // tip label for verification
     login.setOnAction(event -> { //login
-      Map<String,String> info = LoginCheck.initUI(accountInput,pwdInput);
+      Map<String, String> info = LoginCheck.initUI(accountInput, pwdInput);
       boolean loginSucess = LoginCheck.checkLogin(info);
       Alert alert = new Alert(AlertType.INFORMATION);
-      if(loginSucess) {
+      if (loginSucess) {
         alert.setTitle("sign in successfully");
-        alert.setHeaderText(null);
-      }else {
+        alert.setHeaderText("you got it");
+      } else {
         alert.setTitle("wrong account or password");
-        alert.setHeaderText(null);
+        alert.setHeaderText("sorry, please check your account or password");
       }
       alert.showAndWait();
     });
@@ -72,12 +72,10 @@ public class ProjectTest extends Application {
       loginCheck.start(new Stage());
     });
 
-
-    layout.getChildren().addAll(welcome,accountBox, pwdBox, sign,tip);
+    layout.getChildren().addAll(welcome, accountBox, pwdBox, sign, tip);
     primaryStage.setScene(new Scene(layout));
     primaryStage.show();
   }
-
 
 
 }

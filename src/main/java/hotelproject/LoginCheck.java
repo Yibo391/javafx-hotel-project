@@ -29,7 +29,7 @@ public class LoginCheck {
     String userPwd = pwd.getText();
     Map<String, String> a = new HashMap<>();
     a.put("loginName", userName);
-    a.put("loginpwd", userPwd);
+    a.put("loginPwd", userPwd);
     return a;
   }
 
@@ -38,7 +38,7 @@ public class LoginCheck {
     PreparedStatement ps = null;
     ResultSet resultSet = null;
     String name = info.get("loginName");
-    String pwd = info.get("loginpwd");
+    String pwd = info.get("loginPwd");
     String database = "userInfo";
     String user = "root";
     String password = "wangyiboo";
@@ -83,7 +83,7 @@ public class LoginCheck {
     Connection conn = null;
     PreparedStatement ps = null;
     String name = info.get("loginName");
-    String pwd = info.get("loginpwd");
+    String pwd = info.get("loginPwd");
     String user = "root";
     String password = "wangyiboo";
     String database = "userInfo";
