@@ -1,8 +1,11 @@
 package hotelproject;
 
+import java.util.Map;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -30,24 +33,40 @@ public class ChangePwd extends Application {
 
     HBox pwdLabels = new HBox();
     pwdLabels.setPadding(new Insets(10,0,10,0));
-    Label password = new Label("New Password:");
+    Label password = new Label("Old Password:");
     PasswordField pwdInput = new PasswordField();
     pwdLabels.getChildren().addAll(password,pwdInput);
 
-    HBox pwdLabelsAgain = new HBox();
+    HBox pwdLabelsNew = new HBox();
     pwdLabels.setPadding(new Insets(10,0,10,0));
     Label passwordAgain = new Label("New Password:");
     PasswordField pwdInputAgain = new PasswordField();
-    pwdLabelsAgain.getChildren().addAll(passwordAgain,pwdInputAgain);
+    pwdLabelsNew.getChildren().addAll(passwordAgain,pwdInputAgain);
+
+    HBox pwdLabelsNew2 = new HBox();
+    pwdLabels.setPadding(new Insets(10,0,10,0));
+    Label passwordAgain2 = new Label("New Password:");
+    PasswordField pwdInputAgain2 = new PasswordField();
+    pwdLabelsNew2.getChildren().addAll(passwordAgain2,pwdInputAgain2);
 
     Button confirm = new Button("Confirm");
 
     confirm.setOnAction(event -> {
-      if (pwdInput.getText().equals(pwdInputAgain.getText())){
-        System.out.println("ok");
+      Alert alert = new Alert(AlertType.INFORMATION);
+      Map<String,String> info = LoginCheck.initUI(accountInput,pwdInput);
+      boolean success = LoginCheck.checkLogin(info);
+      if (success){
+        Map<String,String> pwdNew = LoginCheck.initUI(accountInput,pwdInputAgain);
+        LoginCheck.changePwd(pwdNew);
+        alert.setTitle("successful");
+        alert.setHeaderText("you got it");
+      }else {
+        alert.setTitle("wrong account or password");
+        alert.setHeaderText("sorry, please check your account or password");
       }
+      alert.showAndWait();
     });
-    root.getChildren().addAll(accountLabels,pwdLabels,pwdLabelsAgain,confirm);
+    root.getChildren().addAll(accountLabels,pwdLabels,pwdLabelsNew,pwdLabelsNew2,confirm);
     primaryStage.setScene(new Scene(root));
     primaryStage.show();
   }
