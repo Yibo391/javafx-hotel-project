@@ -1,12 +1,21 @@
 plugins {
     id 'java'
-    id 'checkstyle'
-    id "com.github.spotbugs" version "4.6.0"
     id "application"
     id 'org.openjfx.javafxplugin' version '0.0.9'
 }
 
-
+    compileJava {
+        doFirst {
+            options.compilerArgs += [
+            '--module-path', classpath.asPath,
+            '--add-modules', 'javafx.controls',
+            '--add-modules', 'javafx.fxml',
+            '--add-modules', 'javafx.graphics',
+            '--add-modules', 'javafx.base',
+            ]
+            classpath = files()
+        }
+    }
 
 apply plugin: 'java'
 
@@ -14,58 +23,7 @@ javafx {
     sdk = System.getProperty("user.dir") + '\\JavaFX SDK'
     version = '12'
     modules = [ 'javafx.controls', 'javafx.fxml' ]
-    configuration = 'compileOnly'
 }
-
-
-spotbugsMain {
-    ignoreFailures = true   // failures are handled via automatic testing
-    showStackTraces = false
-    reports {
-        html {
-            enabled = true
-            destination = file("$buildDir/reports/spotbugs/main/spotbugs.html")
-            //stylesheet = 'fancy-hist.xsl'
-        }
-        xml {
-            enabled = true
-            destination = file("$buildDir/reports/spotbugs/spotbugs.xml")
-        }
-    }
-}
-
-// we dont wan't to run the spotbugs on the unit tests
-spotbugsTest {
-    ignoreFailures = false
-    showStackTraces = false
-    enabled = false
-}
-
-checkstyle {
-    // assign the latest checkstyle version explicitly
-    // default version is very old, likes 5.9
-    toolVersion = '8.38'
-    // checkstyle.xml copy from:
-    // https://raw.githubusercontent.com/checkstyle/checkstyle/checkstyle-8.6/src/main/resources/google_checks.xml
-    // the version should be as same as plugin version
-    configFile = rootProject.file('config/checkstyle/google_checks.xml')    // you can of course change this to something else
-    sourceSets = [] // remove from default build only explicit calls ig.e. gradlew checkStyleMain
-}
-
-
-test {
-    // make sure we run the code quality stuff first
-    // we need the generated reports when testing
-    dependsOn checkstyleMain
-    dependsOn spotbugsMain
-
-    // also some verbose output so we get some info in the console when we run tests
-    testLogging {
-        outputs.upToDateWhen {false}
-        showStandardStreams = true
-    }
-}
-
 
 mainClassName = 'UI'
 
