@@ -57,19 +57,25 @@ public class ProjectTest extends Application {
     login.setOnAction(event -> { //login
       Map<String, String> info = LoginCheck.initUI(accountInput, pwdInput);
       boolean loginSucess = LoginCheck.checkLogin(info);
-      Alert alert = new Alert(AlertType.INFORMATION);
-      if (loginSucess) {
-        alert.setTitle("sign in successfully");
-        alert.setHeaderText("you got it");
-      } else {
+      if (loginSucess && LoginCheck.id.equals("admin")) {
+        AdminUi adminUi = new AdminUi();
+        adminUi.start(new Stage());
+        primaryStage.close();
+      } else if(loginSucess && LoginCheck.id.equals("staff")){
+        StaffUi staffUi = new StaffUi();
+        staffUi.start(new Stage());
+        primaryStage.close();
+      }else {
+        Alert alert = new Alert(AlertType.INFORMATION);
         alert.setTitle("wrong account or password");
         alert.setHeaderText("sorry, please check your account or password");
+        alert.showAndWait();
+
       }
-      alert.showAndWait();
     });
     changePwd.setOnAction(event -> { //change password
-      ChangePwd loginCheck = new ChangePwd();
-      loginCheck.start(new Stage());
+      ChangePwd changePwd1 = new ChangePwd();
+      changePwd1.start(new Stage());
     });
 
     layout.getChildren().addAll(welcome, accountBox, pwdBox, sign, tip);

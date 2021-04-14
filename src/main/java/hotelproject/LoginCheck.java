@@ -11,7 +11,7 @@ import javafx.scene.control.TextField;
 
 //yibo 1234
 public class LoginCheck {
-
+  static String id = "";
   public static Connection connection(int port, String database, String user, String password) {
     Connection conn = null;
     try {
@@ -43,17 +43,16 @@ public class LoginCheck {
     String user = "root";
     String password = "wangyiboo";
     Connection conn = null;
-    int port = 3306; //default port, change it depending on your setup
     try {
       conn = connection(3306,database,user,password);
-      String sql = "select account,password from user where account=? and password=?";
+      String sql = "select account,password,identification from user where account=? and password=?";
       ps = conn.prepareStatement(sql);
       ps.setString(1, name);
       ps.setString(2, pwd);
       resultSet = ps.executeQuery();
-
       while (resultSet.next()) {
-        System.out.println(resultSet.getString(1) + "," + resultSet.getString(2));
+        System.out.println(resultSet.getString(3));
+        id = resultSet.getString(3);
         loginSucess = true;
       }
     } catch (Exception e) {
