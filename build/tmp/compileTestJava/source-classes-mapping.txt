@@ -1,0 +1,4 @@
+rifai/CodeQualityTests.java
+ main.java.cookbook.CodeQualityTests
+ main.java.cookbook.CodeQualityTests$Failure
+ main.java.cookbook.CodeQualityTests$TestCase

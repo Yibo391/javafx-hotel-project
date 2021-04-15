@@ -30,7 +30,17 @@ public class LoginCheck {
       Class.forName("com.mysql.jdbc.Driver");
       String name = info.get("loginName");
       String pwd = info.get("loginpwd");
-      conn = DriverManager.getConnection("jdbc:mysql://localhost/userInfo?user=root&password=wangyiboo");
+      try{
+        conn = DriverManager.getConnection("jdbc:mysql://localhost/userinfo?user=root&password=root");
+      } catch (Exception SQLSyntaxErrorException){
+        Connection tconn = DriverManager.getConnection("jdbc:mysql://localhost/?user=root&password=root");
+        ps = tconn.prepareStatement("create database userinfo");
+        ps.executeUpdate();
+        tconn.close();
+        conn = DriverManager.getConnection("jdbc:mysql://localhost/userinfo?user=root&password=root");
+        ps = conn.prepareStatement("create table user(account TEXT, password TEXT)");
+        ps.executeUpdate();
+      }
 
       String sql = "select account,password from user where account=? and password=?";
       ps = conn.prepareStatement(sql);

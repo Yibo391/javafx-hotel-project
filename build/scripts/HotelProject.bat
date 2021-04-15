@@ -67,11 +67,11 @@ goto fail
 :execute
 @rem Setup the command line
 
-set CLASSPATH=%APP_HOME%\lib\HotelProject.jar;%APP_HOME%\lib\javafx-controls-16-mac.jar;%APP_HOME%\lib\javafx-graphics-16-mac.jar;%APP_HOME%\lib\javafx-graphics-16.jar;%APP_HOME%\lib\javafx-base-16-mac.jar;%APP_HOME%\lib\javafx-base-16.jar;%APP_HOME%\lib\guava-29.0-jre.jar;%APP_HOME%\lib\mysql-connector-java-8.0.23.jar;%APP_HOME%\lib\failureaccess-1.0.1.jar;%APP_HOME%\lib\listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar;%APP_HOME%\lib\jsr305-3.0.2.jar;%APP_HOME%\lib\checker-qual-2.11.1.jar;%APP_HOME%\lib\error_prone_annotations-2.3.4.jar;%APP_HOME%\lib\j2objc-annotations-1.3.jar;%APP_HOME%\lib\protobuf-java-3.11.4.jar
+set CLASSPATH=%APP_HOME%\lib\HotelProject.jar;%APP_HOME%\lib\javafx-controls-16-win.jar;%APP_HOME%\lib\javafx-graphics-16-win.jar;%APP_HOME%\lib\javafx-graphics-16.jar;%APP_HOME%\lib\javafx-base-16-win.jar;%APP_HOME%\lib\javafx-base-16.jar;%APP_HOME%\lib\guava-29.0-jre.jar;%APP_HOME%\lib\mysql-connector-java-8.0.23.jar;%APP_HOME%\lib\failureaccess-1.0.1.jar;%APP_HOME%\lib\listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar;%APP_HOME%\lib\jsr305-3.0.2.jar;%APP_HOME%\lib\checker-qual-2.11.1.jar;%APP_HOME%\lib\error_prone_annotations-2.3.4.jar;%APP_HOME%\lib\j2objc-annotations-1.3.jar;%APP_HOME%\lib\protobuf-java-3.11.4.jar
 
 
 @rem Execute HotelProject
-"%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %HOTEL_PROJECT_OPTS%  -classpath "%CLASSPATH%" hotelproject.HotelProject %*
+"%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %HOTEL_PROJECT_OPTS%  -classpath "%CLASSPATH%" hotelproject.ProjectTest %*
 
 :end
 @rem End local scope for the variables with windows NT shell
