@@ -24,6 +24,7 @@ public class UI extends Application {
     private BorderPane rootLayout;
 
     public static void main(String[] args) {
+        Controller control = new Controller();
         Application.launch(UI.class, args);
     }
 
@@ -32,11 +33,9 @@ public class UI extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/ui.fxml"));
         Parent root = fxmlLoader.load();
         Scene scene = new Scene(root);
-     
          stage.setTitle("Menu");
          stage.setScene(scene);
        stage.show();
-    System.out.println(getClass().getResource(""));
      }
     
 }
