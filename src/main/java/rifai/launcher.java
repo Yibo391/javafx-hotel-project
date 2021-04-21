@@ -1,4 +1,4 @@
-package ui;
+package hotelproject;
 
 import java.io.IOException;
 
@@ -17,15 +17,15 @@ import javafx.fxml.Initializable;
 import javafx.event.ActionEvent;
 import java.net.URL;
 import java.util.ResourceBundle;
-public class UI extends Application {
+public class launcher extends Application {
 
 
-    private Stage primaryStage;
+   private Stage primaryStage;
     private BorderPane rootLayout;
 
     public static void main(String[] args) {
         Controller control = new Controller();
-        Application.launch(UI.class, args);
+        Application.launch(launcher.class, args);
     }
 
     @Override
@@ -33,9 +33,9 @@ public class UI extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/ui.fxml"));
         Parent root = fxmlLoader.load();
         Scene scene = new Scene(root);
-         stage.setTitle("Menu");
+         stage.setTitle("Hydrogen Hotel Login");
          stage.setScene(scene);
        stage.show();
      }
-    
+  
 }

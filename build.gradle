@@ -25,7 +25,7 @@ javafx {
     modules = [ 'javafx.controls', 'javafx.fxml' ]
 }
 
-mainClassName = 'ui.UI'
+mainClassName = 'hotelproject.launcher'
 
 run{
     standardInput = System.in
