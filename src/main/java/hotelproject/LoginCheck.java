@@ -39,13 +39,13 @@ public class LoginCheck {
     ResultSet resultSet = null;
     String name = info.get("loginName");
     String pwd = info.get("loginPwd");
-    String database = "userInfo";
+    String database = "hoteldb";
     String user = "root";
-    String password = "wangyiboo";
+    String password = "root";
     Connection conn = null;
     try {
       conn = connection(3306,database,user,password);
-      String sql = "select account,password,identification from user where account=? and password=?";
+      String sql = "select account,password,role_id from user where account=? and password=?";
       ps = conn.prepareStatement(sql);
       ps.setString(1, name);
       ps.setString(2, pwd);

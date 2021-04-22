@@ -57,11 +57,11 @@ public class ProjectTest extends Application {
     login.setOnAction(event -> { //login
       Map<String, String> info = LoginCheck.initUI(accountInput, pwdInput);
       boolean loginSucess = LoginCheck.checkLogin(info);
-      if (loginSucess && LoginCheck.id.equals("admin")) {
+      if (loginSucess && LoginCheck.id.equals("1")) {
         AdminUi adminUi = new AdminUi();
         adminUi.start(new Stage());
         primaryStage.close();
-      } else if(loginSucess && LoginCheck.id.equals("staff")){
+      } else if(loginSucess && LoginCheck.id.equals("2")){
         StaffUi staffUi = new StaffUi();
         staffUi.start(new Stage());
         primaryStage.close();
