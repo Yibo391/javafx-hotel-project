@@ -40,10 +40,10 @@ public class Controller
   public PasswordField passtext;
 
   @FXML protected void handleSigninButton(ActionEvent event) throws Exception {
-    if((Validator.checkLogin(initUI(usertext, passtext))).equals("staff")){
+    if((Validator.checkLogin(initUI(usertext, passtext))).equals("Staff")){
       StaffUi ui = new StaffUi();
       ui.start(new Stage());
-    } else if((Validator.checkLogin(initUI(usertext, passtext))).equals("admin")){
+    } else if((Validator.checkLogin(initUI(usertext, passtext))).equals("Admin")){
       AdminUi ui = new AdminUi();
       ui.start(new Stage());
     }
@@ -59,11 +59,25 @@ public class Controller
     newroom.createNewRoom(layout, grid);
     layout.getChildren().addAll(grid);
     Stage stage = new Stage();
-    stage.setScene(new Scene(layout,400,400));
+    stage.setScene(new Scene(layout,400,180));
     stage.setTitle("Add Room Dialog");
     stage.show();
 
+  }
 
+  @FXML protected void handleAddCustomerButton(ActionEvent event) throws Exception {
+    NewUserDialog newuser = new NewUserDialog();
+    VBox layout = new VBox();
+    GridPane grid = new GridPane();
+    grid.setPadding(new Insets(10, 10, 10, 10));
+    grid.setVgap(5);
+    grid.setHgap(5);
+    newuser.createNewUser(grid, layout);
+    layout.getChildren().addAll(grid);
+    Stage stage = new Stage();
+    stage.setScene(new Scene(layout,400,120));
+    stage.setTitle("Add User Dialog");
+    stage.show();
   }
 
   Map<String, String> initUI(TextField account, PasswordField pwd) {
