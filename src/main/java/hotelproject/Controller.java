@@ -13,11 +13,14 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
@@ -25,7 +28,7 @@ import java.util.Map;
 import javafx.stage.Stage;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.Slider;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -33,11 +36,28 @@ import javafx.stage.Stage;
 
 public class Controller
 {
+  SQLHandler handler = new SQLHandler();
+
   @FXML
   public TextField usertext;
 
   @FXML
   public PasswordField passtext;
+
+  @FXML
+  public Slider roomsize;
+  
+  @FXML
+  public Slider bedno;
+
+  @FXML
+  public TextField roomno;
+
+  @FXML
+  public TextField rlocation;
+
+  @FXML
+  public TextArea otherinfo;
 
   @FXML protected void handleSigninButton(ActionEvent event) throws Exception {
     if((Validator.checkLogin(initUI(usertext, passtext))).equals("Staff")){
@@ -48,21 +68,45 @@ public class Controller
       ui.start(new Stage());
     }
   }
+
+  @FXML protected void handleSubmitRoomButton(ActionEvent event) throws Exception {
+    String str;
+    try{
+      str = otherinfo.getText();
+    } catch (Exception e){
+      str = "-";
+    }
+    try{
+    String[] list = {String.valueOf(Math.round(roomsize.getValue())),String.valueOf(Math.round(bedno.getValue())),roomno.getText(),rlocation.getText(), str};
+    if(handler.insert("room", list))
+    {
+      Alert alert = new Alert(AlertType.INFORMATION);
+      alert.setTitle("Room Insertion Result");
+      alert.setHeaderText(null);
+      alert.setContentText("Room " + roomno.getText() + " has been succesfully added to the database.");
+      alert.showAndWait();
+
+    } else {
+      Alert alert = new Alert(AlertType.ERROR);
+      alert.setTitle("Room Insertion Error");
+      alert.setHeaderText(null);
+      alert.setContentText("Insertion failed. Make sure you've completed all the fields.");
+      alert.showAndWait();
+    }
+   } catch(Exception e){
+    Alert alert = new Alert(AlertType.ERROR);
+    alert.setTitle("Room Insertion Error");
+    alert.setHeaderText(null);
+    alert.setContentText("SQL Fault.");
+    System.out.println(e);
+    alert.showAndWait();
+   }
+  }
+
   @FXML protected void handleAddRoomButton(ActionEvent event) throws Exception {
     
-    VBox layout = new VBox();
-    GridPane grid = new GridPane();
-        grid.setPadding(new Insets(10, 10, 10, 10));
-        grid.setVgap(5);
-        grid.setHgap(5);
     NewRoomDialog newroom = new NewRoomDialog();
-    newroom.createNewRoom(layout, grid);
-    layout.getChildren().addAll(grid);
-    Stage stage = new Stage();
-    stage.setScene(new Scene(layout,400,180));
-    stage.setTitle("Add Room Dialog");
-    stage.show();
-
+    newroom.start(new Stage());
   }
 
   @FXML protected void handleAddCustomerButton(ActionEvent event) throws Exception {
