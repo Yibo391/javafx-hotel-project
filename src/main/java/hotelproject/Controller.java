@@ -38,6 +38,8 @@ import javafx.stage.Stage;
 public class Controller
 {
   SQLHandler handler = new SQLHandler();
+  
+  String role = "";
 
   @FXML
   public TextField usertext;
@@ -76,10 +78,10 @@ public class Controller
     try{
     if((Validator.checkLogin(initUI(usertext, passtext))).equals("Staff")){
       StaffUi ui = new StaffUi();
-      ui.start(new Stage());
+      ui.start(launcher.stage);
     } else if((Validator.checkLogin(initUI(usertext, passtext))).equals("Admin")){
       AdminUi ui = new AdminUi();
-      ui.start(new Stage());
+      ui.start(launcher.stage);
     }
    } catch(NullPointerException e){
     Alert alert = new Alert(AlertType.ERROR);
@@ -107,6 +109,7 @@ public class Controller
       alert.setContentText("Room " + roomno.getText() + " has been succesfully added to the database.");
       alert.showAndWait();
 
+
     } else {
       Alert alert = new Alert(AlertType.ERROR);
       alert.setTitle("Room Insertion Error");
@@ -131,6 +134,8 @@ public class Controller
     } catch (Exception e){
       str = "-";
     }
+    if((nuuser.getText().length())>=4){
+      if((nupass.getText().length())>=6){
     try{
     String[] list = {nuuser.getText(),nupass.getText(),  nurole.getValue()};
     if(nupass.getText().equals(nupassr.getText())){
@@ -141,6 +146,7 @@ public class Controller
       alert.setHeaderText(null);
       alert.setContentText("User " + nuuser.getText() + " has been succesfully added to the database.");
       alert.showAndWait();
+      
 
     } else {
       Alert alert = new Alert(AlertType.ERROR);
@@ -161,9 +167,22 @@ public class Controller
     alert.setTitle("User Insertion Error");
     alert.setHeaderText(null);
     alert.setContentText("SQL Fault.");
-    System.out.println(e);
     alert.showAndWait();
    }
+  } else {
+    Alert alert = new Alert(AlertType.ERROR);
+    alert.setTitle("User Insertion Error");
+    alert.setHeaderText(null);
+    alert.setContentText("The password must be at least 6 characters long.");
+    alert.showAndWait();
+  }
+} else {
+  Alert alert = new Alert(AlertType.ERROR);
+  alert.setTitle("User Insertion Error");
+  alert.setHeaderText(null);
+  alert.setContentText("The username must be at least 4 characters long.");
+  alert.showAndWait();
+}
   }
 
   @FXML protected void handleAddRoomButton(ActionEvent event) throws Exception {
@@ -184,6 +203,10 @@ public class Controller
     a.put("loginName", userName);
     a.put("loginpwd", userPwd);
     return a;
+  }
+
+  @FXML protected void handleReturnButton(ActionEvent event) throws Exception {
+    System.out.println(role);
   }
 
 
