@@ -14,6 +14,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.layout.GridPane;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -59,6 +60,18 @@ public class Controller
   @FXML
   public TextArea otherinfo;
 
+  @FXML
+  public TextField nuuser;
+
+  @FXML
+  public TextField nupass;
+
+  @FXML
+  public TextField nupassr;
+
+  @FXML
+  public ChoiceBox<String> nurole;
+
   @FXML protected void handleSigninButton(ActionEvent event) throws Exception {
     if((Validator.checkLogin(initUI(usertext, passtext))).equals("Staff")){
       StaffUi ui = new StaffUi();
@@ -103,6 +116,48 @@ public class Controller
    }
   }
 
+  @FXML protected void handleSubmitNewUserButton(ActionEvent event) throws Exception {
+    String str;
+    try{
+      str = otherinfo.getText();
+    } catch (Exception e){
+      str = "-";
+    }
+    try{
+    String[] list = {nuuser.getText(),nupass.getText(),  nurole.getValue()};
+    if(nupass.getText().equals(nupassr.getText())){
+    if(handler.insert("user", list))
+    {
+      Alert alert = new Alert(AlertType.INFORMATION);
+      alert.setTitle("User Insertion Result");
+      alert.setHeaderText(null);
+      alert.setContentText("User " + nuuser.getText() + " has been succesfully added to the database.");
+      alert.showAndWait();
+
+    } else {
+      Alert alert = new Alert(AlertType.ERROR);
+      alert.setTitle("User Insertion Error");
+      alert.setHeaderText(null);
+      alert.setContentText("Insertion failed. Make sure you've completed all the fields.");
+      alert.showAndWait();
+    }
+   } else {
+    Alert alert = new Alert(AlertType.ERROR);
+    alert.setTitle("User Insertion Error");
+    alert.setHeaderText(null);
+    alert.setContentText("Passwords don't match. Please try again.");
+    alert.showAndWait();
+   }
+   } catch(Exception e){
+    Alert alert = new Alert(AlertType.ERROR);
+    alert.setTitle("User Insertion Error");
+    alert.setHeaderText(null);
+    alert.setContentText("SQL Fault.");
+    System.out.println(e);
+    alert.showAndWait();
+   }
+  }
+
   @FXML protected void handleAddRoomButton(ActionEvent event) throws Exception {
     
     NewRoomDialog newroom = new NewRoomDialog();
@@ -111,17 +166,7 @@ public class Controller
 
   @FXML protected void handleAddCustomerButton(ActionEvent event) throws Exception {
     NewUserDialog newuser = new NewUserDialog();
-    VBox layout = new VBox();
-    GridPane grid = new GridPane();
-    grid.setPadding(new Insets(10, 10, 10, 10));
-    grid.setVgap(5);
-    grid.setHgap(5);
-    newuser.createNewUser(grid, layout);
-    layout.getChildren().addAll(grid);
-    Stage stage = new Stage();
-    stage.setScene(new Scene(layout,400,120));
-    stage.setTitle("Add User Dialog");
-    stage.show();
+    newuser.start(new Stage());
   }
 
   Map<String, String> initUI(TextField account, PasswordField pwd) {

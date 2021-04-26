@@ -43,6 +43,21 @@ import java.util.Map;
             return false;
         }
       } else if(table.equals("user")){
+        String values = "\"" + list[0]+ "\"" + ","+"\"" + list[2]+ "\"" + "," + "\"" + list[1]+ "\"";
+        String sql = "INSERT INTO user(account, identification, password) VALUES("+ values +");";
+        try{
+            conn = DriverManager.getConnection("jdbc:mysql://localhost/hoteldb?user=root&password=root&useSSL=false");
+            Statement stmt = conn.createStatement();
+            stmt.executeUpdate(sql);
+            if(!conn.getAutoCommit()){
+                conn.commit();
+            }
+        return true;
+
+        } catch(SQLException e){
+          System.out.println(e);
+            return false;
+        }
 
       }
       return false;
