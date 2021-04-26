@@ -22,7 +22,7 @@ import javafx.event.ActionEvent;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class NewRoomDialog extends Application {
+public class LoginDialog extends Application {
 
   public static void main(String[] args) throws Exception {
     launch(args);
@@ -30,10 +30,10 @@ public class NewRoomDialog extends Application {
 
   @Override
   public void start(Stage primaryStage) throws Exception {
-    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/nrd.fxml"));
+    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/signin.fxml"));
     Parent root = fxmlLoader.load();
     Scene scene = new Scene(root);
-     primaryStage.setTitle("Room Insertion");
+     primaryStage.setTitle("Hydrogen Hotel Login");
      primaryStage.setScene(scene);
      primaryStage.show();
      

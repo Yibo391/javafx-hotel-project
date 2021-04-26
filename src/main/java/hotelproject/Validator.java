@@ -34,13 +34,13 @@ import java.util.Map;
         String name = info.get("loginName");
         String pwd = info.get("loginpwd");
         try{
-          conn = DriverManager.getConnection("jdbc:mysql://localhost/userinfo?user=root&password=root");
+          conn = DriverManager.getConnection("jdbc:mysql://localhost/hoteldb?user=root&password=root");
         } catch (Exception SQLSyntaxErrorException){
           Connection tconn = DriverManager.getConnection("jdbc:mysql://localhost/?user=root&password=root");
-          ps = tconn.prepareStatement("create database userinfo");
+          ps = tconn.prepareStatement("create database hoteldb");
           ps.executeUpdate();
           tconn.close();
-          conn = DriverManager.getConnection("jdbc:mysql://localhost/userinfo?user=root&password=root");
+          conn = DriverManager.getConnection("jdbc:mysql://localhost/hoteldb?user=root&password=root");
           ps = conn.prepareStatement("create table user(account TEXT, password TEXT, identification TEXT)");
           ps.executeUpdate();
         }

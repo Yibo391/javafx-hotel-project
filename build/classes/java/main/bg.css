@@ -1,0 +1,5 @@
+.background {
+-fx-background-position: center;
+-fx-background-image: url('background.png');
+ -fx-background-size: 100% 100%;
+}

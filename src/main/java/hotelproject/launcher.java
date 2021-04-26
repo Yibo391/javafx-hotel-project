@@ -22,6 +22,7 @@ public class launcher extends Application {
 
    private Stage primaryStage;
     private BorderPane rootLayout;
+    public static Stage stage = new Stage();
 
     public static void main(String[] args) {
         Controller control = new Controller();
@@ -29,13 +30,13 @@ public class launcher extends Application {
     }
 
     @Override
-    public void start(Stage stage) throws Exception {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/ui.fxml"));
+    public void start(Stage s) throws Exception {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/signin.fxml"));
         Parent root = fxmlLoader.load();
         Scene scene = new Scene(root);
          stage.setTitle("Hydrogen Hotel Login");
          stage.setScene(scene);
-       stage.show();
+         stage.show();
      }
   
 }
