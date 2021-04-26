@@ -73,6 +73,7 @@ public class Controller
   public ChoiceBox<String> nurole;
 
   @FXML protected void handleSigninButton(ActionEvent event) throws Exception {
+    try{
     if((Validator.checkLogin(initUI(usertext, passtext))).equals("Staff")){
       StaffUi ui = new StaffUi();
       ui.start(new Stage());
@@ -80,6 +81,13 @@ public class Controller
       AdminUi ui = new AdminUi();
       ui.start(new Stage());
     }
+   } catch(NullPointerException e){
+    Alert alert = new Alert(AlertType.ERROR);
+    alert.setTitle("Login Error");
+    alert.setHeaderText(null);
+    alert.setContentText("Login failed. Either your username-pasword combination is wrong or a connection with the database could not be established.");
+    alert.showAndWait();
+   }
   }
 
   @FXML protected void handleSubmitRoomButton(ActionEvent event) throws Exception {
