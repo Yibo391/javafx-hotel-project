@@ -11,6 +11,9 @@ import java.util.ResourceBundle;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.ComboBox;
 import java.sql.ResultSet;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextArea;
@@ -40,6 +43,27 @@ public class Controller
   SQLHandler handler = new SQLHandler();
   
   String role = "";
+
+  @FXML
+  public ComboBox<String> roomSel;
+
+	@FXML
+	public Label bedtypeLabel;
+
+	@FXML
+	public Label floorLebel;
+  
+	@FXML
+	public Label sizeLebel;
+
+	@FXML
+	public Label bookedfromLebel;
+
+	@FXML
+	public Label bookedtoLevel;
+
+	@FXML
+	public Label otherinfolabel;
 
   @FXML
   public TextField usertext;
@@ -208,6 +232,39 @@ public class Controller
   @FXML protected void handleReturnButton(ActionEvent event) throws Exception {
     System.out.println(role);
   }
+
+  @FXML protected void handleViewRoomButton(ActionEvent event) throws Exception {
+    RoomDetailDialog rview = new RoomDetailDialog();
+    rview.start(new Stage());
+
+
+  }
+
+  public void handleComboBox(ActionEvent event) {
+		String roomID= roomSel.getValue();
+		String roomDetailQuery ="SELECT * FROM room where room_number="+roomID;
+		try {
+			Statement statement = (handler.getLink()).createStatement();
+			ResultSet RoomDetailList= statement.executeQuery(roomDetailQuery);
+			
+			if(RoomDetailList.next()) {
+			String beds = RoomDetailList.getString("beds")+" beds";
+			bedtypeLabel.setText(beds);
+			
+			String location = RoomDetailList.getString("Location");
+			floorLebel.setText(location);
+			
+			String size = RoomDetailList.getString("size")+" Square Meters";
+			sizeLebel.setText(size);
+
+      String other = RoomDetailList.getString("other_info");
+			otherinfolabel.setText(other);
+
+			}
+	}catch (Exception e) {
+		e.printStackTrace();
+		}
+	}
 
 
   @FXML

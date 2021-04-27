@@ -23,6 +23,12 @@ import java.util.Map;
 
   public class SQLHandler {
 
+    public static Connection getLink() throws Exception {
+      Connection conn;
+      conn = DriverManager.getConnection("jdbc:mysql://localhost/hoteldb?user=root&password=root&useSSL=false");
+      return conn;
+    }
+
     public static boolean insert(String table, String[] list) {
       Connection conn;
       System.out.println(list);

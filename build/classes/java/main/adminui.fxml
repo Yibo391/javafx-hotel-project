@@ -58,17 +58,27 @@
                   <Font name="Arial Black" size="27.0" />
                </font>
             </Button>
-            <Button layoutX="166.0" layoutY="300.0" mnemonicParsing="false" prefHeight="68.0" prefWidth="281.0" stylesheets="@button.css" text="Edit personnel" textFill="#231d5b">
+            <Button layoutX="158.0" layoutY="368.0" mnemonicParsing="false" prefHeight="68.0" prefWidth="281.0" stylesheets="@button.css" text="Edit personnel" textFill="#231d5b">
                <font>
                   <Font name="Arial Black" size="27.0" />
                </font>
             </Button>
-            <Button layoutX="298.0" layoutY="164.0" mnemonicParsing="false" prefHeight="68.0" prefWidth="296.0" stylesheets="@button.css" text="Manage bookings" textFill="#231d5b">
+            <Button layoutX="298.0" layoutY="164.0" mnemonicParsing="false" prefHeight="68.0" prefWidth="296.0" stylesheets="@button.css" text="Add booking" textFill="#231d5b">
                <font>
                   <Font name="Arial Black" size="27.0" />
                </font>
             </Button>
-            <Button layoutX="306.0" layoutY="232.0" mnemonicParsing="false" prefHeight="68.0" prefWidth="281.0" stylesheets="@button.css" text="Add user" textFill="#231d5b" onAction="#handleAddCustomerButton">
+            <Button layoutX="306.0" layoutY="300.0" mnemonicParsing="false" onAction="#handleAddCustomerButton" prefHeight="68.0" prefWidth="281.0" stylesheets="@button.css" text="Add user" textFill="#231d5b">
+               <font>
+                  <Font name="Arial Black" size="27.0" />
+               </font>
+            </Button>
+            <Button layoutY="300.0" mnemonicParsing="false" prefHeight="68.0" prefWidth="281.0" onAction="#handleViewRoomButton" stylesheets="@button.css" text="Room overview" textFill="#231d5b">
+               <font>
+                  <Font name="Arial Black" size="27.0" />
+               </font>
+            </Button>
+            <Button layoutX="298.0" layoutY="232.0" mnemonicParsing="false" prefHeight="68.0" prefWidth="296.0" stylesheets="@button.css" text="Manage bookings" textFill="#231d5b">
                <font>
                   <Font name="Arial Black" size="27.0" />
                </font>
