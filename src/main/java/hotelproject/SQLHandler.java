@@ -64,6 +64,23 @@ import java.util.Map;
           System.out.println(e);
             return false;
         }
+      } else if(table.equals("booking")){
+        String values = "\"" + list[0]+ "\"" + ","+"\"" + list[1]+ "\"" + "," + "\"" + list[2] + "\"" +  "," + false;
+        System.out.println(values);
+        String sql = "INSERT INTO bookings(room, bFrom, bTo, paid) VALUES("+ values +");";
+        try{
+            conn = DriverManager.getConnection("jdbc:mysql://localhost/hoteldb?user=root&password=root&useSSL=false");
+            Statement stmt = conn.createStatement();
+            stmt.executeUpdate(sql);
+            if(!conn.getAutoCommit()){
+                conn.commit();
+            }
+        return true;
+
+        } catch(SQLException e){
+          System.out.println(e);
+            return false;
+        }
 
       }
       return false;

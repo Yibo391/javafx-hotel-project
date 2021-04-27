@@ -8,6 +8,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
 <AnchorPane prefHeight="514.0" prefWidth="500.0" styleClass="background" stylesheets="@pbg.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hotelproject.Controller">
    <children>
@@ -92,12 +93,17 @@
         </FXCollections>
           </items>
       </ComboBox>
-            <ImageView fitHeight="106.0" fitWidth="315.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="106.0" fitWidth="315.0" layoutX="-28.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@label.png" />
                </image>
             </ImageView>
          </children>
       </AnchorPane>
+      <Text fill="#000340" layoutX="283.0" layoutY="76.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Room Overview">
+         <font>
+            <Font name="Arial" size="27.0" />
+         </font>
+      </Text>
    </children>
 </AnchorPane>

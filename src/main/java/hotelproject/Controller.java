@@ -96,7 +96,28 @@ public class Controller
   public TextField nupassr;
 
   @FXML
+  public ComboBox<String> bRoomSel;
+
+  @FXML
   public ChoiceBox<String> nurole;
+
+  @FXML
+  public ChoiceBox<String> fday;
+
+  @FXML
+  public ChoiceBox<String> fmonth;
+
+  @FXML
+  public ChoiceBox<String> fyear;
+
+  @FXML
+  public ChoiceBox<String> tday;
+
+  @FXML
+  public ChoiceBox<String> tmonth;
+
+  @FXML
+  public ChoiceBox<String> tyear;
 
   @FXML protected void handleSigninButton(ActionEvent event) throws Exception {
     try{
@@ -236,9 +257,44 @@ public class Controller
   @FXML protected void handleViewRoomButton(ActionEvent event) throws Exception {
     RoomDetailDialog rview = new RoomDetailDialog();
     rview.start(new Stage());
-
-
   }
+
+  @FXML protected void handleCreateBookingButton(ActionEvent event) throws Exception {
+    NewBookingDialog nbook = new NewBookingDialog();
+    nbook.start(new Stage());
+  }
+
+  @FXML protected void handleSubmitBookingButton(ActionEvent event) throws Exception {
+    String fromDate = String.valueOf(fyear.getValue()) + "-" + String.valueOf(fmonth.getValue()) + "-" + String.valueOf(fday.getValue());
+    String toDate = String.valueOf(tyear.getValue()) + "-" + String.valueOf(tmonth.getValue()) + "-" + String.valueOf(tday.getValue());
+    String[] list = {bRoomSel.getValue(), fromDate, toDate};
+    try{
+    if(handler.insert("booking", list))
+    {
+      Alert alert = new Alert(AlertType.INFORMATION);
+      alert.setTitle("Booking Insertion Result");
+      alert.setHeaderText(null);
+      alert.setContentText("Room " + bRoomSel.getValue() + " has been succesfully booked.");
+      alert.showAndWait();
+
+
+    } else {
+      Alert alert = new Alert(AlertType.ERROR);
+      alert.setTitle("Booking Insertion Error");
+      alert.setHeaderText(null);
+      alert.setContentText("Insertion failed. Make sure you've completed all the fields.");
+      alert.showAndWait();
+    }
+   } catch(Exception e){
+    Alert alert = new Alert(AlertType.ERROR);
+    alert.setTitle("Booking Insertion Error");
+    alert.setHeaderText(null);
+    alert.setContentText("SQL Fault.");
+    System.out.println(e);
+    alert.showAndWait();
+   }
+  }
+
 
   public void handleComboBox(ActionEvent event) {
 		String roomID= roomSel.getValue();

@@ -36,6 +36,5 @@ public class NewUserDialog extends Application {
      primaryStage.setTitle("User Insertion");
      primaryStage.setScene(scene);
      primaryStage.show();
-     
   }
 }
