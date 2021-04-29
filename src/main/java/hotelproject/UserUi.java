@@ -22,19 +22,21 @@ import javafx.event.ActionEvent;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class NewUserDialog extends Application {
+public class
+UserUi extends Application {
 
-  public static void main(String[] args) throws Exception {
+  public static void main(String[] args) {
     launch(args);
   }
 
   @Override
   public void start(Stage primaryStage) throws Exception {
-    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/nusd.fxml"));
+    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/userui.fxml"));
     Parent root = fxmlLoader.load();
     Scene scene = new Scene(root);
-     primaryStage.setTitle("User Insertion");
+     primaryStage.setTitle("Hydrogen Hotel User Panel");
      primaryStage.setScene(scene);
      primaryStage.show();
+     
   }
 }

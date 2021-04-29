@@ -1,19 +1,27 @@
-hotelproject/launcher.java
- hotelproject.launcher
-hotelproject/module-info.java
- module-info
+hotelproject/UserUi.java
+ hotelproject.UserUi
 hotelproject/LoginDialog.java
  hotelproject.LoginDialog
 hotelproject/SQLHandler.java
  hotelproject.SQLHandler
 hotelproject/Controller.java
  hotelproject.Controller
-hotelproject/Validator.java
- hotelproject.Validator
 hotelproject/NewUserDialog.java
  hotelproject.NewUserDialog
+hotelproject/EditProfileDialog.java
+ hotelproject.EditProfileDialog
 hotelproject/StaffUi.java
  hotelproject.StaffUi
+hotelproject/launcher.java
+ hotelproject.launcher
+hotelproject/NewBookingDialog.java
+ hotelproject.NewBookingDialog
+hotelproject/module-info.java
+ module-info
+hotelproject/Validator.java
+ hotelproject.Validator
+hotelproject/RoomDetailDialog.java
+ hotelproject.RoomDetailDialog
 hotelproject/AdminUi.java
  hotelproject.AdminUi
 hotelproject/NewRoomDialog.java

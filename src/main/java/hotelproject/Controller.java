@@ -11,6 +11,9 @@ import java.util.ResourceBundle;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.ComboBox;
 import java.sql.ResultSet;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextArea;
@@ -39,10 +42,37 @@ public class Controller
 {
   SQLHandler handler = new SQLHandler();
   
-  String role = "";
+  static String username = "";
+
+  @FXML
+  public ComboBox<String> roomSel;
+
+	@FXML
+	public Label bedtypeLabel;
+
+	@FXML
+	public Label floorLebel;
+  
+	@FXML
+	public Label sizeLebel;
+
+	@FXML
+	public Label bookedfromLebel;
+
+	@FXML
+	public Label bookedtoLevel;
+
+	@FXML
+	public Label otherinfolabel;
 
   @FXML
   public TextField usertext;
+
+  @FXML
+  public TextField edituserbar;
+
+  @FXML
+  public TextField editpassbar;
 
   @FXML
   public PasswordField passtext;
@@ -72,15 +102,41 @@ public class Controller
   public TextField nupassr;
 
   @FXML
+  public ComboBox<String> bRoomSel;
+
+  @FXML
   public ChoiceBox<String> nurole;
+
+  @FXML
+  public ChoiceBox<String> fday;
+
+  @FXML
+  public ChoiceBox<String> fmonth;
+
+  @FXML
+  public ChoiceBox<String> fyear;
+
+  @FXML
+  public ChoiceBox<String> tday;
+
+  @FXML
+  public ChoiceBox<String> tmonth;
+
+  @FXML
+  public ChoiceBox<String> tyear;
 
   @FXML protected void handleSigninButton(ActionEvent event) throws Exception {
     try{
     if((Validator.checkLogin(initUI(usertext, passtext))).equals("Staff")){
+      username = usertext.getText();
       StaffUi ui = new StaffUi();
       ui.start(launcher.stage);
     } else if((Validator.checkLogin(initUI(usertext, passtext))).equals("Admin")){
       AdminUi ui = new AdminUi();
+      ui.start(launcher.stage);
+    }  else if((Validator.checkLogin(initUI(usertext, passtext))).equals("Customer")){
+      username = usertext.getText();
+      UserUi ui = new UserUi();
       ui.start(launcher.stage);
     }
    } catch(NullPointerException e){
@@ -206,7 +262,138 @@ public class Controller
   }
 
   @FXML protected void handleReturnButton(ActionEvent event) throws Exception {
-    System.out.println(role);
+  }
+
+  @FXML protected void handleViewRoomButton(ActionEvent event) throws Exception {
+    RoomDetailDialog rview = new RoomDetailDialog();
+    rview.start(new Stage());
+  }
+
+  @FXML protected void handleCreateBookingButton(ActionEvent event) throws Exception {
+    NewBookingDialog nbook = new NewBookingDialog();
+    nbook.start(new Stage());
+  }
+
+  @FXML protected void handleEditProfileButton(ActionEvent event) throws Exception {
+    EditProfileDialog eprof = new EditProfileDialog();
+    eprof.start(new Stage());
+  }
+
+  @FXML protected void handleSubmitBookingButton(ActionEvent event) throws Exception {
+    String fromDate = String.valueOf(fyear.getValue()) + "-" + String.valueOf(fmonth.getValue()) + "-" + String.valueOf(fday.getValue());
+    String toDate = String.valueOf(tyear.getValue()) + "-" + String.valueOf(tmonth.getValue()) + "-" + String.valueOf(tday.getValue());
+    String[] list = {bRoomSel.getValue(), fromDate, toDate};
+    if(bRoomSel.getValue()!=null){
+    try{
+    if(handler.insert("booking", list))
+    {
+      Alert alert = new Alert(AlertType.INFORMATION);
+      alert.setTitle("Booking Insertion Result");
+      alert.setHeaderText(null);
+      alert.setContentText("Room " + bRoomSel.getValue() + " has been succesfully booked.");
+      alert.showAndWait();
+
+
+    } else {
+      Alert alert = new Alert(AlertType.ERROR);
+      alert.setTitle("Booking Insertion Error");
+      alert.setHeaderText(null);
+      alert.setContentText("Insertion failed. Make sure you've completed all the fields.");
+      alert.showAndWait();
+    }
+   } catch(Exception e){
+    Alert alert = new Alert(AlertType.ERROR);
+    alert.setTitle("Booking Insertion Error");
+    alert.setHeaderText(null);
+    alert.setContentText("SQL Fault.");
+    System.out.println(e);
+    alert.showAndWait();
+   }
+  } else {
+    Alert alert = new Alert(AlertType.ERROR);
+    alert.setTitle("Booking Insertion Error");
+    alert.setHeaderText(null);
+    alert.setContentText("Please select a room to book.");
+    alert.showAndWait();
+
+  }
+  }
+
+  @FXML protected void handleEditPApplyButton(ActionEvent event) throws Exception {
+    String[] list = {edituserbar.getText(), editpassbar.getText()};
+    if((edituserbar.getText().length())>=4){
+      if((editpassbar.getText().length())>=6){
+    try{
+    if(handler.update("user", list))
+    {
+      Alert alert = new Alert(AlertType.INFORMATION);
+      alert.setTitle("Profile Edit Result");
+      alert.setHeaderText(null);
+      alert.setContentText("Profile edited succesfully.");
+      username = edituserbar.getText();
+      alert.showAndWait();
+
+
+    } else {
+      Alert alert = new Alert(AlertType.ERROR);
+      alert.setTitle("Profile Edit Error");
+      alert.setHeaderText(null);
+      alert.setContentText("Edit failed. Make sure you've completed all the fields.");
+      alert.showAndWait();
+    }
+   } catch(Exception e){
+    Alert alert = new Alert(AlertType.ERROR);
+    alert.setTitle("Profile Edit");
+    alert.setHeaderText(null);
+    alert.setContentText("SQL Fault.");
+    System.out.println(e);
+    alert.showAndWait();
+   } 
+  } else {
+    Alert alert = new Alert(AlertType.ERROR);
+    alert.setTitle("Profile Edit Error");
+    alert.setHeaderText(null);
+    alert.setContentText("The password must be at least 6 characters long.");
+    alert.showAndWait();
+   }
+  } else {
+    Alert alert = new Alert(AlertType.ERROR);
+    alert.setTitle("Profile Edit Error");
+    alert.setHeaderText(null);
+    alert.setContentText("The username must be at least 4 characters long.");
+    alert.showAndWait();
+  }
+  }
+
+
+  public void handleComboBox(ActionEvent event) {
+		String roomID= roomSel.getValue();
+		String roomDetailQuery ="SELECT * FROM room where room_number="+roomID;
+		try {
+			Statement statement = (handler.getLink()).createStatement();
+			ResultSet RoomDetailList= statement.executeQuery(roomDetailQuery);
+			
+			if(RoomDetailList.next()) {
+			String beds = RoomDetailList.getString("beds")+" beds";
+			bedtypeLabel.setText(beds);
+			
+			String location = RoomDetailList.getString("Location");
+			floorLebel.setText(location);
+			
+			String size = RoomDetailList.getString("size")+" Square Meters";
+			sizeLebel.setText(size);
+
+      String other = RoomDetailList.getString("other_info");
+			otherinfolabel.setText(other);
+
+			}
+	}catch (Exception e) {
+		e.printStackTrace();
+		}
+	}
+
+  public static String getUsername(){
+    return username;
   }
 
 

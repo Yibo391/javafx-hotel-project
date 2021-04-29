@@ -23,6 +23,12 @@ import java.util.Map;
 
   public class SQLHandler {
 
+    public static Connection getLink() throws Exception {
+      Connection conn;
+      conn = DriverManager.getConnection("jdbc:mysql://localhost/hoteldb?user=root&password=root&useSSL=false");
+      return conn;
+    }
+
     public static boolean insert(String table, String[] list) {
       Connection conn;
       System.out.println(list);
@@ -58,7 +64,49 @@ import java.util.Map;
           System.out.println(e);
             return false;
         }
+      } else if(table.equals("booking")){
+        String values = "\"" + list[0]+ "\"" + ","+"\"" + list[1]+ "\"" + "," + "\"" + list[2] + "\"" +  "," + false;
+        System.out.println(values);
+        String sql = "INSERT INTO bookings(room, bFrom, bTo, paid) VALUES("+ values +");";
+        try{
+            conn = DriverManager.getConnection("jdbc:mysql://localhost/hoteldb?user=root&password=root&useSSL=false");
+            Statement stmt = conn.createStatement();
+            stmt.executeUpdate(sql);
+            if(!conn.getAutoCommit()){
+                conn.commit();
+            }
+        return true;
 
+        } catch(SQLException e){
+          System.out.println(e);
+            return false;
+        }
+
+      }
+      return false;
+    }
+
+    public static boolean update(String table, String[] list) {
+      Connection conn;
+      System.out.println(list);
+      if(table.equals("user")){
+        String sql = "UPDATE user SET account = ?, password = ? WHERE account = ?";
+        try{
+            conn = DriverManager.getConnection("jdbc:mysql://localhost/hoteldb?user=root&password=root&useSSL=false");
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1,list[0]);
+            stmt.setString(2,list[1]);
+            stmt.setString(3,Controller.getUsername());
+            stmt.executeUpdate();
+            if(!conn.getAutoCommit()){
+                conn.commit();
+            }
+        return true;
+
+        } catch(SQLException e){
+          System.out.println(e);
+            return false;
+        }
       }
       return false;
     }

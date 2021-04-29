@@ -49,31 +49,21 @@
                   <Image url="@label.png" />
                </image>
             </ImageView>
-            <Button layoutX="-9.0" layoutY="156.0" mnemonicParsing="false" onAction="#handleCreateBookingButton" prefHeight="68.0" prefWidth="296.0" stylesheets="@button.css" text="Create booking" textFill="#231d5b">
+            <Button layoutX="14.0" layoutY="110.0" mnemonicParsing="false" onAction="#handleViewRoomButton" prefHeight="68.0" prefWidth="281.0" stylesheets="@button.css" text="Room overview" textFill="#231d5b">
                <font>
                   <Font name="Arial Black" size="27.0" />
                </font>
             </Button>
-            <Button layoutX="-1.0" layoutY="216.0" mnemonicParsing="false" prefHeight="68.0" prefWidth="281.0" stylesheets="@button.css" text="Find bookings" textFill="#231d5b">
-               <font>
-                  <Font name="Arial Black" size="27.0" />
-               </font>
-            </Button>
-            <Button layoutX="300.0" layoutY="156.0" mnemonicParsing="false" onAction="#handleViewRoomButton" prefHeight="68.0" prefWidth="281.0" stylesheets="@button.css" text="Room overview" textFill="#231d5b">
-               <font>
-                  <Font name="Arial Black" size="27.0" />
-               </font>
-            </Button>
-            <Button layoutX="293.0" layoutY="216.0" mnemonicParsing="false" prefHeight="68.0" prefWidth="296.0" stylesheets="@button.css" text="Manage bookings" textFill="#231d5b">
-               <font>
-                  <Font name="Arial Black" size="27.0" />
-               </font>
-            </Button>
-            <Text fill="#000340" layoutX="345.0" layoutY="61.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Staff Panel">
+            <Text fill="#000340" layoutX="340.0" layoutY="61.0" strokeType="OUTSIDE" strokeWidth="0.0" text="User Panel">
                <font>
                   <Font name="Arial" size="27.0" />
                </font>
             </Text>
+            <Button layoutX="319.0" layoutY="110.0" mnemonicParsing="false" onAction="#handleEditProfileButton" prefHeight="68.0" prefWidth="281.0" stylesheets="@button.css" text="Edit profile" textFill="#231d5b">
+               <font>
+                  <Font name="Arial Black" size="27.0" />
+               </font>
+            </Button>
          </children>
     </AnchorPane>
   </children>
