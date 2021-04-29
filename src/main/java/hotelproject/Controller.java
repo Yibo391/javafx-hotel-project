@@ -42,7 +42,7 @@ public class Controller
 {
   SQLHandler handler = new SQLHandler();
   
-  String role = "";
+  static String username = "";
 
   @FXML
   public ComboBox<String> roomSel;
@@ -67,6 +67,12 @@ public class Controller
 
   @FXML
   public TextField usertext;
+
+  @FXML
+  public TextField edituserbar;
+
+  @FXML
+  public TextField editpassbar;
 
   @FXML
   public PasswordField passtext;
@@ -122,10 +128,15 @@ public class Controller
   @FXML protected void handleSigninButton(ActionEvent event) throws Exception {
     try{
     if((Validator.checkLogin(initUI(usertext, passtext))).equals("Staff")){
+      username = usertext.getText();
       StaffUi ui = new StaffUi();
       ui.start(launcher.stage);
     } else if((Validator.checkLogin(initUI(usertext, passtext))).equals("Admin")){
       AdminUi ui = new AdminUi();
+      ui.start(launcher.stage);
+    }  else if((Validator.checkLogin(initUI(usertext, passtext))).equals("Customer")){
+      username = usertext.getText();
+      UserUi ui = new UserUi();
       ui.start(launcher.stage);
     }
    } catch(NullPointerException e){
@@ -251,7 +262,6 @@ public class Controller
   }
 
   @FXML protected void handleReturnButton(ActionEvent event) throws Exception {
-    System.out.println(role);
   }
 
   @FXML protected void handleViewRoomButton(ActionEvent event) throws Exception {
@@ -262,6 +272,11 @@ public class Controller
   @FXML protected void handleCreateBookingButton(ActionEvent event) throws Exception {
     NewBookingDialog nbook = new NewBookingDialog();
     nbook.start(new Stage());
+  }
+
+  @FXML protected void handleEditProfileButton(ActionEvent event) throws Exception {
+    EditProfileDialog eprof = new EditProfileDialog();
+    eprof.start(new Stage());
   }
 
   @FXML protected void handleSubmitBookingButton(ActionEvent event) throws Exception {
@@ -295,6 +310,52 @@ public class Controller
    }
   }
 
+  @FXML protected void handleEditPApplyButton(ActionEvent event) throws Exception {
+    String[] list = {edituserbar.getText(), editpassbar.getText()};
+    if((edituserbar.getText().length())>=4){
+      if((editpassbar.getText().length())>=6){
+    try{
+    if(handler.update("user", list))
+    {
+      Alert alert = new Alert(AlertType.INFORMATION);
+      alert.setTitle("Profile Edit Result");
+      alert.setHeaderText(null);
+      alert.setContentText("Profile edited succesfully.");
+      username = edituserbar.getText();
+      alert.showAndWait();
+
+
+    } else {
+      Alert alert = new Alert(AlertType.ERROR);
+      alert.setTitle("Profile Edit Error");
+      alert.setHeaderText(null);
+      alert.setContentText("Edit failed. Make sure you've completed all the fields.");
+      alert.showAndWait();
+    }
+   } catch(Exception e){
+    Alert alert = new Alert(AlertType.ERROR);
+    alert.setTitle("Profile Edit");
+    alert.setHeaderText(null);
+    alert.setContentText("SQL Fault.");
+    System.out.println(e);
+    alert.showAndWait();
+   } 
+  } else {
+    Alert alert = new Alert(AlertType.ERROR);
+    alert.setTitle("Profile Edit Error");
+    alert.setHeaderText(null);
+    alert.setContentText("The password must be at least 6 characters long.");
+    alert.showAndWait();
+   }
+  } else {
+    Alert alert = new Alert(AlertType.ERROR);
+    alert.setTitle("Profile Edit Error");
+    alert.setHeaderText(null);
+    alert.setContentText("The username must be at least 4 characters long.");
+    alert.showAndWait();
+  }
+  }
+
 
   public void handleComboBox(ActionEvent event) {
 		String roomID= roomSel.getValue();
@@ -321,6 +382,10 @@ public class Controller
 		e.printStackTrace();
 		}
 	}
+
+  public static String getUsername(){
+    return username;
+  }
 
 
   @FXML

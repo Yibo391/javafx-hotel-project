@@ -85,4 +85,29 @@ import java.util.Map;
       }
       return false;
     }
+
+    public static boolean update(String table, String[] list) {
+      Connection conn;
+      System.out.println(list);
+      if(table.equals("user")){
+        String sql = "UPDATE user SET account = ?, password = ? WHERE account = ?";
+        try{
+            conn = DriverManager.getConnection("jdbc:mysql://localhost/hoteldb?user=root&password=root&useSSL=false");
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1,list[0]);
+            stmt.setString(2,list[1]);
+            stmt.setString(3,Controller.getUsername());
+            stmt.executeUpdate();
+            if(!conn.getAutoCommit()){
+                conn.commit();
+            }
+        return true;
+
+        } catch(SQLException e){
+          System.out.println(e);
+            return false;
+        }
+      }
+      return false;
+    }
 }

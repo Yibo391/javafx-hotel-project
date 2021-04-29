@@ -150,7 +150,7 @@
     </items>
 </ChoiceBox>
       <ChoiceBox id="tyr" fx:id="tyear" layoutX="382.0" layoutY="253.0" prefHeight="25.0" prefWidth="51.0" />
-      <Button layoutX="155.0" layoutY="312.0" mnemonicParsing="false" stylesheets="@button.css" text="Create booking" onAction="#handleSubmitBookingButton">
+      <Button layoutX="155.0" layoutY="312.0" mnemonicParsing="false" onAction="#handleSubmitBookingButton" stylesheets="@button.css" text="Create booking">
          <font>
             <Font name="Arial Narrow Bold" size="26.0" />
          </font>
