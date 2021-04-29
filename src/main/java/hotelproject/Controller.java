@@ -283,6 +283,7 @@ public class Controller
     String fromDate = String.valueOf(fyear.getValue()) + "-" + String.valueOf(fmonth.getValue()) + "-" + String.valueOf(fday.getValue());
     String toDate = String.valueOf(tyear.getValue()) + "-" + String.valueOf(tmonth.getValue()) + "-" + String.valueOf(tday.getValue());
     String[] list = {bRoomSel.getValue(), fromDate, toDate};
+    if(bRoomSel.getValue()!=null){
     try{
     if(handler.insert("booking", list))
     {
@@ -308,6 +309,14 @@ public class Controller
     System.out.println(e);
     alert.showAndWait();
    }
+  } else {
+    Alert alert = new Alert(AlertType.ERROR);
+    alert.setTitle("Booking Insertion Error");
+    alert.setHeaderText(null);
+    alert.setContentText("Please select a room to book.");
+    alert.showAndWait();
+
+  }
   }
 
   @FXML protected void handleEditPApplyButton(ActionEvent event) throws Exception {
