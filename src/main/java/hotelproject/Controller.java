@@ -105,6 +105,21 @@ public class Controller
   public ComboBox<String> bRoomSel;
 
   @FXML
+  public ChoiceBox<String> eroomid;
+
+  @FXML
+  public Slider eroomsize;
+
+  @FXML
+  public Slider ebedno;
+
+  @FXML
+  public TextField elocation;
+
+  @FXML
+  public TextArea einfo;
+
+  @FXML
   public ChoiceBox<String> nurole;
 
   @FXML
@@ -269,6 +284,12 @@ public class Controller
     rview.start(new Stage());
   }
 
+  @FXML protected void handleEditRoomButton(ActionEvent event) throws Exception {
+    EditRoomDialog eroom = new EditRoomDialog();
+    eroom.start(new Stage());
+  }
+
+
   @FXML protected void handleCreateBookingButton(ActionEvent event) throws Exception {
     NewBookingDialog nbook = new NewBookingDialog();
     nbook.start(new Stage());
@@ -365,6 +386,49 @@ public class Controller
   }
   }
 
+  @FXML protected void handleEditRApplyButton(ActionEvent event) throws Exception {
+    String str;
+    try{
+      str = einfo.getText();
+    } catch (Exception e){
+      str = "-";
+    }
+    String[] list = {String.valueOf(Math.round(eroomsize.getValue())),String.valueOf(Math.round(ebedno.getValue())),eroomid.getValue(),elocation.getText(), str};
+    if(eroomid.getValue()!=null){
+    try{
+    if(handler.update("room", list))
+    {
+      Alert alert = new Alert(AlertType.INFORMATION);
+      alert.setTitle("Room Edit Result");
+      alert.setHeaderText(null);
+      alert.setContentText("Room " + eroomid.getValue() + " has been edited succesfully.");
+      alert.showAndWait();
+
+
+    } else {
+      Alert alert = new Alert(AlertType.ERROR);
+      alert.setTitle("Room Edit Error");
+      alert.setHeaderText(null);
+      alert.setContentText("Edit failed. Make sure you've completed all the fields.");
+      alert.showAndWait();
+    }
+   } catch(Exception e){
+    Alert alert = new Alert(AlertType.ERROR);
+    alert.setTitle("Room Edit Error");
+    alert.setHeaderText(null);
+    alert.setContentText("SQL Fault.");
+    System.out.println(e);
+    alert.showAndWait();
+   } 
+  } else {
+    Alert alert = new Alert(AlertType.ERROR);
+    alert.setTitle("Room Edit Error");
+    alert.setHeaderText(null);
+    alert.setContentText("Please select a room to edit.");
+    alert.showAndWait();
+  }
+  }
+
 
   public void handleComboBox(ActionEvent event) {
 		String roomID= roomSel.getValue();
@@ -385,6 +449,36 @@ public class Controller
 
       String other = RoomDetailList.getString("other_info");
 			otherinfolabel.setText(other);
+
+			}
+	}catch (Exception e) {
+		e.printStackTrace();
+		}
+	}
+
+  public void handleRoomComboBox(ActionEvent event) {
+		String roomID = eroomid.getValue();
+		String roomDetailQuery ="SELECT * FROM room where room_number="+roomID;
+		try {
+			Statement statement = (handler.getLink()).createStatement();
+			ResultSet RoomDetailList= statement.executeQuery(roomDetailQuery);
+			
+			if(RoomDetailList.next()) {
+			Integer beds = Integer.parseInt(RoomDetailList.getString("beds"));
+			ebedno.setValue(beds);
+			
+			String location = RoomDetailList.getString("Location");
+			elocation.setText(location);
+			
+			Integer size = Integer.parseInt(RoomDetailList.getString("size"));
+			eroomsize.setValue(size);
+
+      String other = RoomDetailList.getString("other_info");
+      try{
+			otherinfolabel.setText(other);
+      } catch (Exception e){
+        System.out.println(e);
+      }
 
 			}
 	}catch (Exception e) {
