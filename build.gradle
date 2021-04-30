@@ -20,7 +20,7 @@ plugins {
 apply plugin: 'java'
 
 javafx {
-    sdk = System.getProperty("user.dir") + '\\JavaFX SDK'
+
     version = '12'
     modules = [ 'javafx.controls', 'javafx.fxml' ]
 }
