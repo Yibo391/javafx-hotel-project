@@ -15,10 +15,11 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.control.ListView;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import java.sql.Statement;
-import javafx.scene.control.ChoiceBox;
+
 import javafx.event.ActionEvent;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -26,8 +27,7 @@ import java.sql.ResultSet;
 import javafx.collections.ObservableList;
 import javafx.collections.FXCollections;
 
-
-public class NewBookingDialog extends Application {
+public class BookingDetailDialog extends Application {
 
   public static void main(String[] args) throws Exception {
     launch(args);
@@ -35,35 +35,23 @@ public class NewBookingDialog extends Application {
 
   @Override
   public void start(Stage primaryStage) throws Exception {
-    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/rbook.fxml"));
+    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/bookDetail.fxml"));
     Parent root = fxmlLoader.load();
     Scene scene = new Scene(root);
-    SQLHandler handler = new SQLHandler();
-     primaryStage.setTitle("New Booking Dialog");
+		SQLHandler handler = new SQLHandler();
+     primaryStage.setTitle("Booking Overview");
      primaryStage.setScene(scene);
      primaryStage.show();
-     ComboBox bRoomSel = (ComboBox) scene.lookup("#rs");
-     ComboBox bBookingCustomer = (ComboBox) scene.lookup("#rcust");
+     ListView bklist = (ListView) scene.lookup("#bklist");
 		 ObservableList <String> list = FXCollections.observableArrayList();
-		 String roomIdQuery = "SELECT room_number FROM room";
-     String customerQuery = "SELECT ID, firstname, lastname FROM customer";
+		 String bookIdQuery = "SELECT * FROM bookings";
 		 try {
 			Statement statement = (handler.getLink()).createStatement();
-			ResultSet RoomIDList= statement.executeQuery(roomIdQuery);
-			while (RoomIDList.next()) {
-				list.add(RoomIDList.getString("room_number"));
+			ResultSet BookIDList= statement.executeQuery(bookIdQuery);
+			while (BookIDList.next()) {
+        String entry = BookIDList.getString("ID") + ". " + "Room " + BookIDList.getString("Room") + ", " + BookIDList.getString("Customer") + ", " + BookIDList.getString("bFrom") + " -> " + BookIDList.getString("bTo");
+        bklist.getItems().add(entry);  
 			}
-			for(int i = 0; i<list.size(); i++){
-				System.out.println(list.get(i));
-				bRoomSel.getItems().add(list.get(i));
-			}
-      statement = (handler.getLink()).createStatement();
-			ResultSet CustomerList= statement.executeQuery(customerQuery);
-			while (CustomerList.next()) {
-			String s = CustomerList.getString("ID") + ". " + CustomerList.getString("firstname") + " " + CustomerList.getString("lastname");
-      bBookingCustomer.getItems().add(s);
-			}
-
 	} catch (Exception e) {
 		e.printStackTrace();
 		}

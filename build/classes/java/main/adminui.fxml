@@ -79,7 +79,7 @@
                   <Font name="Arial Black" size="27.0" />
                </font>
             </Button>
-            <Button layoutX="298.0" layoutY="232.0" mnemonicParsing="false" prefHeight="68.0" prefWidth="296.0" stylesheets="@button.css" text="Manage bookings" textFill="#231d5b">
+            <Button layoutX="298.0" layoutY="232.0" mnemonicParsing="false" prefHeight="68.0" prefWidth="296.0" stylesheets="@button.css" text="Manage bookings" textFill="#231d5b" onAction="#handleManageBookingsButton">
                <font>
                   <Font name="Arial Black" size="27.0" />
                </font>

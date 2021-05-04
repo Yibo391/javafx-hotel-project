@@ -6,10 +6,17 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.PasswordField;
 import javafx.event.ActionEvent;
+import javafx.scene.input.MouseEvent;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import javafx.scene.control.ButtonType;
+import java.util.Optional;
+import javafx.scene.control.Dialog;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import javafx.scene.control.DatePicker;
 import java.sql.PreparedStatement;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -18,13 +25,16 @@ import java.sql.ResultSet;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.ChoiceBox;
+import java.util.Locale;
 import javafx.scene.layout.GridPane;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ListView;
 import javafx.scene.control.Alert.AlertType;
+import javafx.util.StringConverter;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
@@ -66,6 +76,21 @@ public class Controller
 	public Label otherinfolabel;
 
   @FXML
+  public Label bRoomLabel;
+
+  @FXML
+  public Label bFromLabel;
+
+  @FXML
+  public Label bToLabel;
+
+  @FXML
+  public Label bCustomerLabel;
+
+  @FXML
+  public Label bPaidLabel;
+
+  @FXML
   public TextField usertext;
 
   @FXML
@@ -105,7 +130,13 @@ public class Controller
   public ComboBox<String> bRoomSel;
 
   @FXML
+  public ComboBox<String> bBookingCustomer;
+
+  @FXML
   public ChoiceBox<String> eroomid;
+
+  @FXML
+  public ListView<String> ebookinglist;
 
   @FXML
   public Slider eroomsize;
@@ -123,22 +154,10 @@ public class Controller
   public ChoiceBox<String> nurole;
 
   @FXML
-  public ChoiceBox<String> fday;
+  public DatePicker bFromDate;
 
   @FXML
-  public ChoiceBox<String> fmonth;
-
-  @FXML
-  public ChoiceBox<String> fyear;
-
-  @FXML
-  public ChoiceBox<String> tday;
-
-  @FXML
-  public ChoiceBox<String> tmonth;
-
-  @FXML
-  public ChoiceBox<String> tyear;
+  public DatePicker bToDate;
 
   @FXML protected void handleSigninButton(ActionEvent event) throws Exception {
     try{
@@ -279,6 +298,11 @@ public class Controller
   @FXML protected void handleReturnButton(ActionEvent event) throws Exception {
   }
 
+  @FXML protected void handleManageBookingsButton(ActionEvent event) throws Exception {
+    BookingDetailDialog bdet = new BookingDetailDialog();
+    bdet.start(new Stage());
+  }
+
   @FXML protected void handleViewRoomButton(ActionEvent event) throws Exception {
     RoomDetailDialog rview = new RoomDetailDialog();
     rview.start(new Stage());
@@ -300,10 +324,56 @@ public class Controller
     eprof.start(new Stage());
   }
 
-  @FXML protected void handleSubmitBookingButton(ActionEvent event) throws Exception {
-    String fromDate = String.valueOf(fyear.getValue()) + "-" + String.valueOf(fmonth.getValue()) + "-" + String.valueOf(fday.getValue());
-    String toDate = String.valueOf(tyear.getValue()) + "-" + String.valueOf(tmonth.getValue()) + "-" + String.valueOf(tday.getValue());
-    String[] list = {bRoomSel.getValue(), fromDate, toDate};
+  @FXML protected void handleMarkBookingButton(ActionEvent event) throws Exception {
+    ObservableList<String> selectedIndices = ebookinglist.getSelectionModel().getSelectedItems();
+    String s = "\0";
+    for(String o : selectedIndices){
+      s = o;
+    }
+    String [] split = s.split(" ");
+    s = split[0].replaceAll("\\D+","");
+    Alert alert1 = new Alert(AlertType.CONFIRMATION);
+    alert1.setTitle("Booking Payment");
+    alert1.setHeaderText(null);
+    alert1.setContentText("You are about to mark this booking as paid. Are you sure?");
+    Optional<ButtonType> result = alert1.showAndWait();
+    if (result.get() == ButtonType.OK){
+      String[] list = {s};
+      if(handler.update("bookingpay", list)){
+        Alert alert2 = new Alert(AlertType.INFORMATION);
+        alert2.setTitle("Booking Payment");
+        alert2.setHeaderText(null);
+        alert2.setContentText("Booking ID " + s + " has been marked as paid.");
+        alert2.showAndWait();
+      } else {
+        Alert alert = new Alert(AlertType.ERROR);
+    alert.setTitle("Booking Payment Error");
+    alert.setHeaderText(null);
+    alert.setContentText("SQL Fault.");
+    alert.showAndWait();
+   }
+      
+  } else {
+  }
+
+  }
+
+  @FXML protected void handleSubmitBookingButton(ActionEvent event) throws Exception {   
+    DatePicker mrgRqstDate = new DatePicker();
+DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.US);
+    String fromDate = bFromDate.getValue().format(df);
+    String toDate = bToDate.getValue().format(df);
+    String s = "\0";
+    try{
+    s = bBookingCustomer.getValue().replaceAll("\\D+","");
+    } catch (Exception e){
+      Alert alert = new Alert(AlertType.ERROR);
+      alert.setTitle("Booking Insertion Error");
+      alert.setHeaderText(null);
+      alert.setContentText("Please select a customer to book for.");
+      alert.showAndWait();
+    }
+    String[] list = {bRoomSel.getValue(), fromDate, toDate, s};
     if(bRoomSel.getValue()!=null){
     try{
     if(handler.insert("booking", list))
@@ -479,6 +549,48 @@ public class Controller
       } catch (Exception e){
         System.out.println(e);
       }
+
+			}
+	}catch (Exception e) {
+		e.printStackTrace();
+		}
+	}
+
+    public void handleBookingView(MouseEvent event) {
+    ObservableList<String> selectedIndices = ebookinglist.getSelectionModel().getSelectedItems();
+    String s = "\0";
+    for(String o : selectedIndices){
+      s = o;
+    }
+    String [] split = s.split(" ");
+    s = split[0].replaceAll("\\D+","");
+
+		String roomDetailQuery ="SELECT * FROM bookings where ID="+s;
+		try {
+			Statement statement = (handler.getLink()).createStatement();
+			ResultSet RoomDetailList= statement.executeQuery(roomDetailQuery);
+		
+			if(RoomDetailList.next()) {
+        String name = "\0";
+        String customerQuery = "SELECT firstname, lastname FROM customer WHERE ID="+RoomDetailList.getString("Customer");
+        statement = (handler.getLink()).createStatement();
+        ResultSet CustomerName= statement.executeQuery(customerQuery);
+        if(CustomerName.next()){
+          name = CustomerName.getString("firstname") + " " + CustomerName.getString("lastname");
+        }
+        bRoomLabel.setText( RoomDetailList.getString("Room"));
+			
+        bFromLabel.setText(RoomDetailList.getString("bFrom"));
+        
+        bToLabel.setText(RoomDetailList.getString("bTo"));
+  
+        bCustomerLabel.setText(name);
+        System.out.println(RoomDetailList.getString("Paid"));
+        if(RoomDetailList.getString("Paid").equals("0")){
+          bPaidLabel.setText("No");
+        } else {
+          bPaidLabel.setText("Yes");
+        }
 
 			}
 	}catch (Exception e) {

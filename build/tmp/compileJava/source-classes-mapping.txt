@@ -10,6 +10,8 @@ hotelproject/NewUserDialog.java
  hotelproject.NewUserDialog
 hotelproject/EditProfileDialog.java
  hotelproject.EditProfileDialog
+hotelproject/BookingDetailDialog.java
+ hotelproject.BookingDetailDialog
 hotelproject/StaffUi.java
  hotelproject.StaffUi
 hotelproject/launcher.java

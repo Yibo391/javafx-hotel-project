@@ -4,6 +4,9 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import java.util.Random;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextArea;
@@ -65,9 +68,26 @@ import java.util.Map;
             return false;
         }
       } else if(table.equals("booking")){
-        String values = "\"" + list[0]+ "\"" + ","+"\"" + list[1]+ "\"" + "," + "\"" + list[2] + "\"" +  "," + false;
+        Random random = new Random();
+        Integer rid = 0;
+        String check = "SELECT ID FROM bookings";
+        try{
+          conn = DriverManager.getConnection("jdbc:mysql://localhost/hoteldb?user=root&password=root&useSSL=false");
+        Statement statement = conn.createStatement();
+        ObservableList <String> rlist = FXCollections.observableArrayList();
+        ResultSet BookIDList = statement.executeQuery(check);
+        while (BookIDList.next()) {
+          rlist.add(BookIDList.getString("ID"));
+        }
+        while(rlist.contains(String.valueOf(rid))){
+          rid = random.nextInt(9999);
+        }
+      } catch(SQLException e){
+        System.out.println(e);
+      }
+        String values = "\"" + list[0]+ "\"" + ","+"\"" + list[1]+ "\"" + "," + "\"" + list[2] + "\"" +  "," + false + "," + "\"" + list[3] + "\"" + "," + "\"" + rid + "\"";
         System.out.println(values);
-        String sql = "INSERT INTO bookings(room, bFrom, bTo, paid) VALUES("+ values +");";
+        String sql = "INSERT INTO bookings(room, bFrom, bTo, paid, Customer, ID) VALUES("+ values +");";
         try{
             conn = DriverManager.getConnection("jdbc:mysql://localhost/hoteldb?user=root&password=root&useSSL=false");
             Statement stmt = conn.createStatement();
@@ -119,6 +139,22 @@ import java.util.Map;
             stmt.setString(4,list[4]);
             stmt.setString(5,list[2]);
             System.out.println(stmt);
+            stmt.executeUpdate();
+            if(!conn.getAutoCommit()){
+                conn.commit();
+            }
+        return true;
+
+        } catch(SQLException e){
+          System.out.println(e);
+            return false;
+        }
+      } else if(table.equals("bookingpay")){
+        String sql = "UPDATE bookings SET paid = 1 WHERE ID = ?";
+        try{
+            conn = DriverManager.getConnection("jdbc:mysql://localhost/hoteldb?user=root&password=root&useSSL=false");
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1,list[0]);
             stmt.executeUpdate();
             if(!conn.getAutoCommit()){
                 conn.commit();
