@@ -183,7 +183,12 @@ import java.util.Map;
             return false;
         }
       } else if(table.equals("bookingpay")){
-        String sql = "UPDATE bookings SET paid = 1 WHERE ID = ?";
+        String sql = "\0";
+        if (list[1].equals("1")){
+        sql = "UPDATE bookings SET paid = 1 WHERE ID = ?";
+        } else {
+        sql = "UPDATE bookings SET paid = 0 WHERE ID = ?";
+        }
         try{
             conn = DriverManager.getConnection("jdbc:mysql://localhost/hoteldb?user=root&password=root&useSSL=false");
             PreparedStatement stmt = conn.prepareStatement(sql);

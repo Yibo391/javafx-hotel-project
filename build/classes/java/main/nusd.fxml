@@ -95,7 +95,6 @@
                         <ChoiceBox layoutX="331.0" layoutY="334.0" prefWidth="150.0" fx:id="nurole">
     <items>
         <FXCollections fx:factory="observableArrayList">
-            <String fx:value="Customer" />
             <String fx:value="Staff" />
             <String fx:value="Admin" />
         </FXCollections>

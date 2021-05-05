@@ -432,18 +432,35 @@ public class Controller
   @FXML protected void handleMarkBookingButton(ActionEvent event) throws Exception {
     ObservableList<String> selectedIndices = ebookinglist.getSelectionModel().getSelectedItems();
     String s = "\0";
+    boolean paid = false;
     for(String o : selectedIndices){
       s = o;
     }
     String [] split = s.split(" ");
     s = split[0].replaceAll("\\D+","");
+    Statement statement = (handler.getLink()).createStatement();
+    String check = "SELECT Paid FROM bookings WHERE ID ='"+s+"'";
+      try {
+        ResultSet isPaid = statement.executeQuery(check);
+        statement = (handler.getLink()).createStatement();
+        while (isPaid.next()) {
+          if(isPaid.getString("Paid").equals("0")){
+            paid = false;
+          } else {
+            paid = true;
+          }
+        }
+        } catch (Exception e){
+          System.out.println(e);
+        }
+          if(paid == false){
     Alert alert1 = new Alert(AlertType.CONFIRMATION);
     alert1.setTitle("Booking Payment");
     alert1.setHeaderText(null);
     alert1.setContentText("You are about to mark this booking as paid. Are you sure?");
     Optional<ButtonType> result = alert1.showAndWait();
     if (result.get() == ButtonType.OK){
-      String[] list = {s};
+      String[] list = {s, "1"};
       if(handler.update("bookingpay", list)){
         Alert alert2 = new Alert(AlertType.INFORMATION);
         alert2.setTitle("Booking Payment");
@@ -460,7 +477,31 @@ public class Controller
       
   } else {
   }
-
+} else {
+  Alert alert1 = new Alert(AlertType.CONFIRMATION);
+  alert1.setTitle("Booking Payment");
+  alert1.setHeaderText(null);
+  alert1.setContentText("This booking is marked as paid. Do you want to unmark?");
+  Optional<ButtonType> result = alert1.showAndWait();
+  if (result.get() == ButtonType.OK){
+    String[] list = {s, "0"};
+    if(handler.update("bookingpay", list)){
+      Alert alert2 = new Alert(AlertType.INFORMATION);
+      alert2.setTitle("Booking Payment");
+      alert2.setHeaderText(null);
+      alert2.setContentText("Booking ID " + s + " is no longer marked as paid.");
+      alert2.showAndWait();
+    } else {
+      Alert alert = new Alert(AlertType.ERROR);
+  alert.setTitle("Booking Payment Error");
+  alert.setHeaderText(null);
+  alert.setContentText("SQL Fault.");
+  alert.showAndWait();
+ }
+    
+} else {
+}
+}
   }
 
   @FXML protected void handleSubmitBookingButton(ActionEvent event) throws Exception {   
