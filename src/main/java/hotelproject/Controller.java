@@ -104,6 +104,21 @@ public class Controller
 
   @FXML
   public Slider roomsize;
+
+  @FXML
+  public TextField ncfirst;
+
+  @FXML
+  public TextField nclast;
+
+  @FXML
+  public TextField ncaddr;
+
+  @FXML
+  public TextField ncphone;
+
+  @FXML
+  public ChoiceBox<String> ncpayment;
   
   @FXML
   public Slider bedno;
@@ -158,6 +173,10 @@ public class Controller
 
   @FXML
   public DatePicker bToDate;
+
+  public boolean isNumeric(String s) {  
+    return s != null && s.matches("[-+]?\\d*\\.?\\d+");  
+  }  
 
   @FXML protected void handleSigninButton(ActionEvent event) throws Exception {
     try{
@@ -216,6 +235,86 @@ public class Controller
     alert.showAndWait();
    }
   }
+
+
+  @FXML protected void handleSubmitNewCustomerButton(ActionEvent event) throws Exception {
+
+    if((ncfirst.getText().length())>=2){
+      if((nclast.getText().length())>=2){
+        if((ncaddr.getText().length())>=6){
+          if((ncphone.getText().length())>=4){
+            if((ncpayment.getValue()!=null)){
+              if((isNumeric(ncphone.getText()))){
+    try{
+    String[] list = {ncfirst.getText(),nclast.getText(),ncaddr.getText(),ncphone.getText(),ncpayment.getValue()};
+    if(handler.insert("customer", list))
+    {
+      Alert alert = new Alert(AlertType.INFORMATION);
+      alert.setTitle("Customer Insertion Result");
+      alert.setHeaderText(null);
+      alert.setContentText(ncfirst.getText() + " " + nclast.getText() + " has been succesfully added to the database.");
+      alert.showAndWait();
+      
+
+    } else {
+      Alert alert = new Alert(AlertType.ERROR);
+      alert.setTitle("Customer Insertion Error");
+      alert.setHeaderText(null);
+      alert.setContentText("Insertion failed. Make sure you've completed all the fields.");
+      alert.showAndWait();
+    }
+   } catch(Exception e){
+    Alert alert = new Alert(AlertType.ERROR);
+    alert.setTitle("Customer Insertion Error");
+    alert.setHeaderText(null);
+    alert.setContentText("SQL Fault.");
+    alert.showAndWait();
+   }
+  } else {
+    Alert alert = new Alert(AlertType.ERROR);
+    alert.setTitle("Customer Insertion Error");
+    alert.setHeaderText(null);
+    alert.setContentText("The phone number cannot contain letters.");
+    alert.showAndWait();
+  }
+  } else {
+    Alert alert = new Alert(AlertType.ERROR);
+    alert.setTitle("Customer Insertion Error");
+    alert.setHeaderText(null);
+    alert.setContentText("Please select a payment method.");
+    alert.showAndWait();
+  }
+} else {
+  Alert alert = new Alert(AlertType.ERROR);
+  alert.setTitle("Customer Insertion Error");
+  alert.setHeaderText(null);
+  alert.setContentText("The phone number must be at least 4 digits long.");
+  alert.showAndWait();
+}
+} else {
+  Alert alert = new Alert(AlertType.ERROR);
+  alert.setTitle("Customer Insertion Error");
+  alert.setHeaderText(null);
+  alert.setContentText("The address must be at least 6 characters long.");
+  alert.showAndWait();
+}
+  } else {
+  Alert alert = new Alert(AlertType.ERROR);
+  alert.setTitle("Customer Insertion Error");
+  alert.setHeaderText(null);
+  alert.setContentText("The last name must be at least two characters long.");
+  alert.showAndWait();
+      }
+  } else {
+    Alert alert = new Alert(AlertType.ERROR);
+  alert.setTitle("Customer Insertion Error");
+  alert.setHeaderText(null);
+  alert.setContentText("The first name must be at least two characters long.");
+  alert.showAndWait();
+  }
+  }
+
+
 
   @FXML protected void handleSubmitNewUserButton(ActionEvent event) throws Exception {
     String str;
@@ -281,7 +380,7 @@ public class Controller
     newroom.start(new Stage());
   }
 
-  @FXML protected void handleAddCustomerButton(ActionEvent event) throws Exception {
+  @FXML protected void handleAddUserButton(ActionEvent event) throws Exception {
     NewUserDialog newuser = new NewUserDialog();
     newuser.start(new Stage());
   }
@@ -323,6 +422,12 @@ public class Controller
     EditProfileDialog eprof = new EditProfileDialog();
     eprof.start(new Stage());
   }
+
+  @FXML protected void handleAddCustomerButton(ActionEvent event) throws Exception {
+    NewCustomerDialog nc = new NewCustomerDialog();
+    nc.start(new Stage());
+  }
+
 
   @FXML protected void handleMarkBookingButton(ActionEvent event) throws Exception {
     ObservableList<String> selectedIndices = ebookinglist.getSelectionModel().getSelectedItems();

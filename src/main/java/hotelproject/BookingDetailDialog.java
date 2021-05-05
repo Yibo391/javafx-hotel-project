@@ -48,8 +48,15 @@ public class BookingDetailDialog extends Application {
 		 try {
 			Statement statement = (handler.getLink()).createStatement();
 			ResultSet BookIDList= statement.executeQuery(bookIdQuery);
+      statement = (handler.getLink()).createStatement();
 			while (BookIDList.next()) {
-        String entry = BookIDList.getString("ID") + ". " + "Room " + BookIDList.getString("Room") + ", " + BookIDList.getString("Customer") + ", " + BookIDList.getString("bFrom") + " -> " + BookIDList.getString("bTo");
+        String name = "\0";
+        String customerNameQuery = "SELECT firstname, lastname FROM customer WHERE ID ='"+BookIDList.getString("Customer")+"'";
+        ResultSet Customers= statement.executeQuery(customerNameQuery);
+        while(Customers.next()){
+          name = Customers.getString("firstname") + " " + Customers.getString("lastname");
+        }
+        String entry = BookIDList.getString("ID") + ". " + "Room " + BookIDList.getString("Room") + ", " + name + ", " + BookIDList.getString("bFrom") + " -> " + BookIDList.getString("bTo");
         bklist.getItems().add(entry);  
 			}
 	} catch (Exception e) {

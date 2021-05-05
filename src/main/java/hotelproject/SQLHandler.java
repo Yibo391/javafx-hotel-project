@@ -102,6 +102,39 @@ import java.util.Map;
             return false;
         }
 
+      } else if(table.equals("customer")){
+        Random random = new Random();
+        Integer rid = 0;
+        String check = "SELECT ID FROM customer";
+        try{
+          conn = DriverManager.getConnection("jdbc:mysql://localhost/hoteldb?user=root&password=root&useSSL=false");
+        Statement statement = conn.createStatement();
+        ObservableList <String> rlist = FXCollections.observableArrayList();
+        ResultSet CustomerIDList = statement.executeQuery(check);
+        while (CustomerIDList.next()) {
+          rlist.add(CustomerIDList.getString("ID"));
+        }
+        while(rlist.contains(String.valueOf(rid))){
+          rid = random.nextInt(9999);
+        }
+      } catch(SQLException e){
+        System.out.println(e);
+      }
+        String values = "'"+list[0]+"'"+","+"'"+list[1] +"'"+ "," +"'"+ list[4]+"'"+","+"'"+list[3]+"'"+","+"'"+list[2]+"'"+","+"'"+rid+"'";
+        String sql = "INSERT INTO customer(firstname, lastname, prefpayment,phone,address,ID) VALUES("+values+");";
+        try{
+            conn = DriverManager.getConnection("jdbc:mysql://localhost/hoteldb?user=root&password=root&useSSL=false");
+            Statement stmt = conn.createStatement();
+            stmt.executeUpdate(sql);
+            if(!conn.getAutoCommit()){
+                conn.commit();
+            }
+        return true;
+
+        } catch(SQLException e){
+          System.out.println(e);
+            return false;
+        }
       }
       return false;
     }
