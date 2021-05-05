@@ -64,7 +64,7 @@
                   <Font name="Arial Black" size="27.0" />
                </font>
             </Button>
-            <Button layoutX="293.0" layoutY="216.0" mnemonicParsing="false" prefHeight="68.0" prefWidth="296.0" stylesheets="@button.css" text="Manage bookings" textFill="#231d5b">
+            <Button layoutX="293.0" layoutY="216.0" mnemonicParsing="false" onAction="#handleManageBookingsButton" prefHeight="68.0" prefWidth="296.0" stylesheets="@button.css" text="Manage bookings" textFill="#231d5b">
                <font>
                   <Font name="Arial Black" size="27.0" />
                </font>
@@ -74,6 +74,11 @@
                   <Font name="Arial" size="27.0" />
                </font>
             </Text>
+            <Button layoutX="94.0" layoutY="276.0" mnemonicParsing="false" onAction="#handleAddCustomerButton" prefHeight="68.0" prefWidth="413.0" stylesheets="@button.css" text="Add new customer" textFill="#231d5b">
+               <font>
+                  <Font name="Arial Black" size="27.0" />
+               </font>
+            </Button>
          </children>
     </AnchorPane>
   </children>

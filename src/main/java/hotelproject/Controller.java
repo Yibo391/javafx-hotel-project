@@ -6,10 +6,17 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.PasswordField;
 import javafx.event.ActionEvent;
+import javafx.scene.input.MouseEvent;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import javafx.scene.control.ButtonType;
+import java.util.Optional;
+import javafx.scene.control.Dialog;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import javafx.scene.control.DatePicker;
 import java.sql.PreparedStatement;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -18,13 +25,16 @@ import java.sql.ResultSet;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.ChoiceBox;
+import java.util.Locale;
 import javafx.scene.layout.GridPane;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ListView;
 import javafx.scene.control.Alert.AlertType;
+import javafx.util.StringConverter;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
@@ -66,6 +76,21 @@ public class Controller
 	public Label otherinfolabel;
 
   @FXML
+  public Label bRoomLabel;
+
+  @FXML
+  public Label bFromLabel;
+
+  @FXML
+  public Label bToLabel;
+
+  @FXML
+  public Label bCustomerLabel;
+
+  @FXML
+  public Label bPaidLabel;
+
+  @FXML
   public TextField usertext;
 
   @FXML
@@ -79,6 +104,21 @@ public class Controller
 
   @FXML
   public Slider roomsize;
+
+  @FXML
+  public TextField ncfirst;
+
+  @FXML
+  public TextField nclast;
+
+  @FXML
+  public TextField ncaddr;
+
+  @FXML
+  public TextField ncphone;
+
+  @FXML
+  public ChoiceBox<String> ncpayment;
   
   @FXML
   public Slider bedno;
@@ -105,25 +145,38 @@ public class Controller
   public ComboBox<String> bRoomSel;
 
   @FXML
+  public ComboBox<String> bBookingCustomer;
+
+  @FXML
+  public ChoiceBox<String> eroomid;
+
+  @FXML
+  public ListView<String> ebookinglist;
+
+  @FXML
+  public Slider eroomsize;
+
+  @FXML
+  public Slider ebedno;
+
+  @FXML
+  public TextField elocation;
+
+  @FXML
+  public TextArea einfo;
+
+  @FXML
   public ChoiceBox<String> nurole;
 
   @FXML
-  public ChoiceBox<String> fday;
+  public DatePicker bFromDate;
 
   @FXML
-  public ChoiceBox<String> fmonth;
+  public DatePicker bToDate;
 
-  @FXML
-  public ChoiceBox<String> fyear;
-
-  @FXML
-  public ChoiceBox<String> tday;
-
-  @FXML
-  public ChoiceBox<String> tmonth;
-
-  @FXML
-  public ChoiceBox<String> tyear;
+  public boolean isNumeric(String s) {  
+    return s != null && s.matches("[-+]?\\d*\\.?\\d+");  
+  }  
 
   @FXML protected void handleSigninButton(ActionEvent event) throws Exception {
     try{
@@ -182,6 +235,86 @@ public class Controller
     alert.showAndWait();
    }
   }
+
+
+  @FXML protected void handleSubmitNewCustomerButton(ActionEvent event) throws Exception {
+
+    if((ncfirst.getText().length())>=2){
+      if((nclast.getText().length())>=2){
+        if((ncaddr.getText().length())>=6){
+          if((ncphone.getText().length())>=4){
+            if((ncpayment.getValue()!=null)){
+              if((isNumeric(ncphone.getText()))){
+    try{
+    String[] list = {ncfirst.getText(),nclast.getText(),ncaddr.getText(),ncphone.getText(),ncpayment.getValue()};
+    if(handler.insert("customer", list))
+    {
+      Alert alert = new Alert(AlertType.INFORMATION);
+      alert.setTitle("Customer Insertion Result");
+      alert.setHeaderText(null);
+      alert.setContentText(ncfirst.getText() + " " + nclast.getText() + " has been succesfully added to the database.");
+      alert.showAndWait();
+      
+
+    } else {
+      Alert alert = new Alert(AlertType.ERROR);
+      alert.setTitle("Customer Insertion Error");
+      alert.setHeaderText(null);
+      alert.setContentText("Insertion failed. Make sure you've completed all the fields.");
+      alert.showAndWait();
+    }
+   } catch(Exception e){
+    Alert alert = new Alert(AlertType.ERROR);
+    alert.setTitle("Customer Insertion Error");
+    alert.setHeaderText(null);
+    alert.setContentText("SQL Fault.");
+    alert.showAndWait();
+   }
+  } else {
+    Alert alert = new Alert(AlertType.ERROR);
+    alert.setTitle("Customer Insertion Error");
+    alert.setHeaderText(null);
+    alert.setContentText("The phone number cannot contain letters.");
+    alert.showAndWait();
+  }
+  } else {
+    Alert alert = new Alert(AlertType.ERROR);
+    alert.setTitle("Customer Insertion Error");
+    alert.setHeaderText(null);
+    alert.setContentText("Please select a payment method.");
+    alert.showAndWait();
+  }
+} else {
+  Alert alert = new Alert(AlertType.ERROR);
+  alert.setTitle("Customer Insertion Error");
+  alert.setHeaderText(null);
+  alert.setContentText("The phone number must be at least 4 digits long.");
+  alert.showAndWait();
+}
+} else {
+  Alert alert = new Alert(AlertType.ERROR);
+  alert.setTitle("Customer Insertion Error");
+  alert.setHeaderText(null);
+  alert.setContentText("The address must be at least 6 characters long.");
+  alert.showAndWait();
+}
+  } else {
+  Alert alert = new Alert(AlertType.ERROR);
+  alert.setTitle("Customer Insertion Error");
+  alert.setHeaderText(null);
+  alert.setContentText("The last name must be at least two characters long.");
+  alert.showAndWait();
+      }
+  } else {
+    Alert alert = new Alert(AlertType.ERROR);
+  alert.setTitle("Customer Insertion Error");
+  alert.setHeaderText(null);
+  alert.setContentText("The first name must be at least two characters long.");
+  alert.showAndWait();
+  }
+  }
+
+
 
   @FXML protected void handleSubmitNewUserButton(ActionEvent event) throws Exception {
     String str;
@@ -247,7 +380,7 @@ public class Controller
     newroom.start(new Stage());
   }
 
-  @FXML protected void handleAddCustomerButton(ActionEvent event) throws Exception {
+  @FXML protected void handleAddUserButton(ActionEvent event) throws Exception {
     NewUserDialog newuser = new NewUserDialog();
     newuser.start(new Stage());
   }
@@ -264,10 +397,21 @@ public class Controller
   @FXML protected void handleReturnButton(ActionEvent event) throws Exception {
   }
 
+  @FXML protected void handleManageBookingsButton(ActionEvent event) throws Exception {
+    BookingDetailDialog bdet = new BookingDetailDialog();
+    bdet.start(new Stage());
+  }
+
   @FXML protected void handleViewRoomButton(ActionEvent event) throws Exception {
     RoomDetailDialog rview = new RoomDetailDialog();
     rview.start(new Stage());
   }
+
+  @FXML protected void handleEditRoomButton(ActionEvent event) throws Exception {
+    EditRoomDialog eroom = new EditRoomDialog();
+    eroom.start(new Stage());
+  }
+
 
   @FXML protected void handleCreateBookingButton(ActionEvent event) throws Exception {
     NewBookingDialog nbook = new NewBookingDialog();
@@ -279,10 +423,132 @@ public class Controller
     eprof.start(new Stage());
   }
 
-  @FXML protected void handleSubmitBookingButton(ActionEvent event) throws Exception {
-    String fromDate = String.valueOf(fyear.getValue()) + "-" + String.valueOf(fmonth.getValue()) + "-" + String.valueOf(fday.getValue());
-    String toDate = String.valueOf(tyear.getValue()) + "-" + String.valueOf(tmonth.getValue()) + "-" + String.valueOf(tday.getValue());
-    String[] list = {bRoomSel.getValue(), fromDate, toDate};
+  @FXML protected void handleAddCustomerButton(ActionEvent event) throws Exception {
+    NewCustomerDialog nc = new NewCustomerDialog();
+    nc.start(new Stage());
+  }
+
+  @FXML protected void handleDeleteRoomButton(ActionEvent event) throws Exception {
+    if(roomSel.getValue()!=null){
+      Alert alert1 = new Alert(AlertType.CONFIRMATION);
+      alert1.setTitle("Room Deletion");
+      alert1.setHeaderText(null);
+      alert1.setContentText("You are about to delete room " +roomSel.getValue()+". Are you sure?");
+      Optional<ButtonType> result = alert1.showAndWait();
+      if (result.get() == ButtonType.OK){
+        String[] list = {roomSel.getValue()};
+        if(handler.delete("room", list)){
+          Alert alert2 = new Alert(AlertType.INFORMATION);
+          alert2.setTitle("Room Deletion");
+          alert2.setHeaderText(null);
+          alert2.setContentText("Room " + roomSel.getValue() + " has been deleted.");
+          alert2.showAndWait();
+        } else {
+          Alert alert = new Alert(AlertType.ERROR);
+      alert.setTitle("Room Deletion Error");
+      alert.setHeaderText(null);
+      alert.setContentText("SQL Fault.");
+      alert.showAndWait();
+     }
+        
+    } else {
+    }
+
+    }
+  }
+
+
+  @FXML protected void handleMarkBookingButton(ActionEvent event) throws Exception {
+    ObservableList<String> selectedIndices = ebookinglist.getSelectionModel().getSelectedItems();
+    String s = "\0";
+    boolean paid = false;
+    for(String o : selectedIndices){
+      s = o;
+    }
+    String [] split = s.split(" ");
+    s = split[0].replaceAll("\\D+","");
+    Statement statement = (handler.getLink()).createStatement();
+    String check = "SELECT Paid FROM bookings WHERE ID ='"+s+"'";
+      try {
+        ResultSet isPaid = statement.executeQuery(check);
+        statement = (handler.getLink()).createStatement();
+        while (isPaid.next()) {
+          if(isPaid.getString("Paid").equals("0")){
+            paid = false;
+          } else {
+            paid = true;
+          }
+        }
+        } catch (Exception e){
+          System.out.println(e);
+        }
+          if(paid == false){
+    Alert alert1 = new Alert(AlertType.CONFIRMATION);
+    alert1.setTitle("Booking Payment");
+    alert1.setHeaderText(null);
+    alert1.setContentText("You are about to mark this booking as paid. Are you sure?");
+    Optional<ButtonType> result = alert1.showAndWait();
+    if (result.get() == ButtonType.OK){
+      String[] list = {s, "1"};
+      if(handler.update("bookingpay", list)){
+        Alert alert2 = new Alert(AlertType.INFORMATION);
+        alert2.setTitle("Booking Payment");
+        alert2.setHeaderText(null);
+        alert2.setContentText("Booking ID " + s + " has been marked as paid.");
+        alert2.showAndWait();
+      } else {
+        Alert alert = new Alert(AlertType.ERROR);
+    alert.setTitle("Booking Payment Error");
+    alert.setHeaderText(null);
+    alert.setContentText("SQL Fault.");
+    alert.showAndWait();
+   }
+      
+  } else {
+  }
+} else {
+  Alert alert1 = new Alert(AlertType.CONFIRMATION);
+  alert1.setTitle("Booking Payment");
+  alert1.setHeaderText(null);
+  alert1.setContentText("This booking is marked as paid. Do you want to unmark?");
+  Optional<ButtonType> result = alert1.showAndWait();
+  if (result.get() == ButtonType.OK){
+    String[] list = {s, "0"};
+    if(handler.update("bookingpay", list)){
+      Alert alert2 = new Alert(AlertType.INFORMATION);
+      alert2.setTitle("Booking Payment");
+      alert2.setHeaderText(null);
+      alert2.setContentText("Booking ID " + s + " is no longer marked as paid.");
+      alert2.showAndWait();
+    } else {
+      Alert alert = new Alert(AlertType.ERROR);
+  alert.setTitle("Booking Payment Error");
+  alert.setHeaderText(null);
+  alert.setContentText("SQL Fault.");
+  alert.showAndWait();
+ }
+    
+} else {
+}
+}
+  }
+
+  @FXML protected void handleSubmitBookingButton(ActionEvent event) throws Exception {   
+    DatePicker mrgRqstDate = new DatePicker();
+DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.US);
+    String fromDate = bFromDate.getValue().format(df);
+    String toDate = bToDate.getValue().format(df);
+    String s = "\0";
+    try{
+    s = bBookingCustomer.getValue().replaceAll("\\D+","");
+    } catch (Exception e){
+      Alert alert = new Alert(AlertType.ERROR);
+      alert.setTitle("Booking Insertion Error");
+      alert.setHeaderText(null);
+      alert.setContentText("Please select a customer to book for.");
+      alert.showAndWait();
+    }
+    String[] list = {bRoomSel.getValue(), fromDate, toDate, s};
     if(bRoomSel.getValue()!=null){
     try{
     if(handler.insert("booking", list))
@@ -365,6 +631,49 @@ public class Controller
   }
   }
 
+  @FXML protected void handleEditRApplyButton(ActionEvent event) throws Exception {
+    String str;
+    try{
+      str = einfo.getText();
+    } catch (Exception e){
+      str = "-";
+    }
+    String[] list = {String.valueOf(Math.round(eroomsize.getValue())),String.valueOf(Math.round(ebedno.getValue())),eroomid.getValue(),elocation.getText(), str};
+    if(eroomid.getValue()!=null){
+    try{
+    if(handler.update("room", list))
+    {
+      Alert alert = new Alert(AlertType.INFORMATION);
+      alert.setTitle("Room Edit Result");
+      alert.setHeaderText(null);
+      alert.setContentText("Room " + eroomid.getValue() + " has been edited succesfully.");
+      alert.showAndWait();
+
+
+    } else {
+      Alert alert = new Alert(AlertType.ERROR);
+      alert.setTitle("Room Edit Error");
+      alert.setHeaderText(null);
+      alert.setContentText("Edit failed. Make sure you've completed all the fields.");
+      alert.showAndWait();
+    }
+   } catch(Exception e){
+    Alert alert = new Alert(AlertType.ERROR);
+    alert.setTitle("Room Edit Error");
+    alert.setHeaderText(null);
+    alert.setContentText("SQL Fault.");
+    System.out.println(e);
+    alert.showAndWait();
+   } 
+  } else {
+    Alert alert = new Alert(AlertType.ERROR);
+    alert.setTitle("Room Edit Error");
+    alert.setHeaderText(null);
+    alert.setContentText("Please select a room to edit.");
+    alert.showAndWait();
+  }
+  }
+
 
   public void handleComboBox(ActionEvent event) {
 		String roomID= roomSel.getValue();
@@ -385,6 +694,78 @@ public class Controller
 
       String other = RoomDetailList.getString("other_info");
 			otherinfolabel.setText(other);
+
+			}
+	}catch (Exception e) {
+		e.printStackTrace();
+		}
+	}
+
+  public void handleRoomComboBox(ActionEvent event) {
+		String roomID = eroomid.getValue();
+		String roomDetailQuery ="SELECT * FROM room where room_number="+roomID;
+		try {
+			Statement statement = (handler.getLink()).createStatement();
+			ResultSet RoomDetailList= statement.executeQuery(roomDetailQuery);
+			
+			if(RoomDetailList.next()) {
+			Integer beds = Integer.parseInt(RoomDetailList.getString("beds"));
+			ebedno.setValue(beds);
+			
+			String location = RoomDetailList.getString("Location");
+			elocation.setText(location);
+			
+			Integer size = Integer.parseInt(RoomDetailList.getString("size"));
+			eroomsize.setValue(size);
+
+      String other = RoomDetailList.getString("other_info");
+      try{
+			otherinfolabel.setText(other);
+      } catch (Exception e){
+        System.out.println(e);
+      }
+
+			}
+	}catch (Exception e) {
+		e.printStackTrace();
+		}
+	}
+
+    public void handleBookingView(MouseEvent event) {
+    ObservableList<String> selectedIndices = ebookinglist.getSelectionModel().getSelectedItems();
+    String s = "\0";
+    for(String o : selectedIndices){
+      s = o;
+    }
+    String [] split = s.split(" ");
+    s = split[0].replaceAll("\\D+","");
+
+		String roomDetailQuery ="SELECT * FROM bookings where ID="+s;
+		try {
+			Statement statement = (handler.getLink()).createStatement();
+			ResultSet RoomDetailList= statement.executeQuery(roomDetailQuery);
+		
+			if(RoomDetailList.next()) {
+        String name = "\0";
+        String customerQuery = "SELECT firstname, lastname FROM customer WHERE ID="+RoomDetailList.getString("Customer");
+        statement = (handler.getLink()).createStatement();
+        ResultSet CustomerName= statement.executeQuery(customerQuery);
+        if(CustomerName.next()){
+          name = CustomerName.getString("firstname") + " " + CustomerName.getString("lastname");
+        }
+        bRoomLabel.setText( RoomDetailList.getString("Room"));
+			
+        bFromLabel.setText(RoomDetailList.getString("bFrom"));
+        
+        bToLabel.setText(RoomDetailList.getString("bTo"));
+  
+        bCustomerLabel.setText(name);
+        System.out.println(RoomDetailList.getString("Paid"));
+        if(RoomDetailList.getString("Paid").equals("0")){
+          bPaidLabel.setText("No");
+        } else {
+          bPaidLabel.setText("Yes");
+        }
 
 			}
 	}catch (Exception e) {

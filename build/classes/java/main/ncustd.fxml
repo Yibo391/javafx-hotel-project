@@ -32,6 +32,8 @@
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 
+<?import java.lang.String?>
+<?import javafx.collections.FXCollections?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
@@ -42,35 +44,33 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
-<?import javafx.collections.FXCollections?>
-<?import java.lang.String?>
 
 <VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="491.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hotelproject.Controller">
   <children>
     <AnchorPane maxHeight="-1.0" maxWidth="-1.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="433.0" prefWidth="600.0" styleClass="background" stylesheets="@pbg.css" VBox.vgrow="ALWAYS">
          <children>
-            <Text fill="#000340" layoutX="151.0" layoutY="172.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username">
+            <Text fill="#000340" layoutX="151.0" layoutY="172.0" strokeType="OUTSIDE" strokeWidth="0.0" text="First name">
                <font>
                   <Font name="Arial Black" size="19.0" />
                </font>
             </Text>
-            <Text fill="#000340" layoutX="154.0" layoutY="234.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Password">
+            <Text fill="#000340" layoutX="152.0" layoutY="212.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Last name">
                <font>
                   <Font name="Arial Black" size="19.0" />
                </font>
             </Text>
-            <Text fill="#000340" layoutX="113.0" layoutY="294.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Repeat password">
+            <Text fill="#000340" layoutX="162.0" layoutY="253.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Address">
                <font>
                   <Font name="Arial Black" size="19.0" />
                </font>
             </Text>
-            <TextField fx:id="nuuser" alignment="CENTER" layoutX="336.0" layoutY="152.0" prefHeight="25.0" prefWidth="140.0" promptText="Insert username here" />
-            <Text fill="#000340" layoutX="181.0" layoutY="354.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Role">
+            <TextField fx:id="ncfirst" alignment="CENTER" layoutX="336.0" layoutY="152.0" prefHeight="25.0" prefWidth="140.0" promptText="Insert first name here" />
+            <Text fill="#000340" layoutX="167.0" layoutY="355.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Preferred payment method">
                <font>
                   <Font name="Arial Black" size="19.0" />
                </font>
             </Text>
-            <Button id="submit" layoutX="257.0" layoutY="419.0" mnemonicParsing="false" onAction="#handleSubmitNewUserButton" prefHeight="38.0" prefWidth="97.0" stylesheets="@button.css" text="Submit">
+            <Button id="submit" layoutX="257.0" layoutY="419.0" mnemonicParsing="false" onAction="#handleSubmitNewCustomerButton" prefHeight="38.0" prefWidth="97.0" stylesheets="@button.css" text="Submit">
                <font>
                   <Font name="Arial Narrow Bold" size="23.0" />
                </font>
@@ -80,7 +80,7 @@
                   <Image url="@label.png" />
                </image>
             </ImageView>
-            <Text fill="#000340" layoutX="324.0" layoutY="70.0" strokeType="OUTSIDE" strokeWidth="0.0" text="User Insertion">
+            <Text fill="#000340" layoutX="324.0" layoutY="70.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Customer Insertion">
                <font>
                   <Font name="AmdtSymbols" size="27.0" />
                </font>
@@ -90,16 +90,23 @@
                   <Font name="Arial Narrow Bold" size="19.0" />
                </font>
             </Label>
-            <TextField fx:id="nupass" alignment="CENTER" layoutX="336.0" layoutY="214.0" prefHeight="25.0" prefWidth="140.0" promptText="Insert password here" />
-            <TextField fx:id="nupassr" alignment="CENTER" layoutX="336.0" layoutY="274.0" prefHeight="25.0" prefWidth="140.0" promptText="Repeat password here" />
-                        <ChoiceBox layoutX="331.0" layoutY="334.0" prefWidth="150.0" fx:id="nurole">
+            <TextField fx:id="nclast" alignment="CENTER" layoutX="336.0" layoutY="192.0" prefHeight="25.0" prefWidth="140.0" promptText="Insert last name here" />
+            <TextField fx:id="ncaddr" alignment="CENTER" layoutX="336.0" layoutY="233.0" prefHeight="25.0" prefWidth="140.0" promptText="Insert address here" />
+                        <ChoiceBox fx:id="ncpayment" layoutX="231.0" layoutY="368.0" prefWidth="150.0">
     <items>
         <FXCollections fx:factory="observableArrayList">
-            <String fx:value="Staff" />
-            <String fx:value="Admin" />
+            <String fx:value="Cash" />
+            <String fx:value="Card" />
+            <String fx:value="Swish" />
         </FXCollections>
     </items>
 </ChoiceBox>
+            <Text fill="#000340" layoutX="132.0" layoutY="293.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Phone number">
+               <font>
+                  <Font name="Arial Black" size="19.0" />
+               </font>
+            </Text>
+            <TextField fx:id="ncphone" alignment="CENTER" layoutX="336.0" layoutY="273.0" prefHeight="25.0" prefWidth="140.0" promptText="Insert phone no. here" />
          </children>
     </AnchorPane>
   </children>
