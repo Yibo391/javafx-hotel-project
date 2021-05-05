@@ -428,6 +428,35 @@ public class Controller
     nc.start(new Stage());
   }
 
+  @FXML protected void handleDeleteRoomButton(ActionEvent event) throws Exception {
+    if(roomSel.getValue()!=null){
+      Alert alert1 = new Alert(AlertType.CONFIRMATION);
+      alert1.setTitle("Room Deletion");
+      alert1.setHeaderText(null);
+      alert1.setContentText("You are about to delete room " +roomSel.getValue()+". Are you sure?");
+      Optional<ButtonType> result = alert1.showAndWait();
+      if (result.get() == ButtonType.OK){
+        String[] list = {roomSel.getValue()};
+        if(handler.delete("room", list)){
+          Alert alert2 = new Alert(AlertType.INFORMATION);
+          alert2.setTitle("Room Deletion");
+          alert2.setHeaderText(null);
+          alert2.setContentText("Room " + roomSel.getValue() + " has been deleted.");
+          alert2.showAndWait();
+        } else {
+          Alert alert = new Alert(AlertType.ERROR);
+      alert.setTitle("Room Deletion Error");
+      alert.setHeaderText(null);
+      alert.setContentText("SQL Fault.");
+      alert.showAndWait();
+     }
+        
+    } else {
+    }
+
+    }
+  }
+
 
   @FXML protected void handleMarkBookingButton(ActionEvent event) throws Exception {
     ObservableList<String> selectedIndices = ebookinglist.getSelectionModel().getSelectedItems();

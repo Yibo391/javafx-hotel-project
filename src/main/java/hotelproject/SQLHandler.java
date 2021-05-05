@@ -206,4 +206,27 @@ import java.util.Map;
       }
       return false;
     }
+
+    public static boolean delete(String table, String[] list) {
+      Connection conn;
+      System.out.println(list);
+      if(table.equals("room")){
+        String sql = "DELETE FROM room WHERE room_number = ?";
+        try{
+            conn = DriverManager.getConnection("jdbc:mysql://localhost/hoteldb?user=root&password=root&useSSL=false");
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1,list[0]);
+            stmt.executeUpdate();
+            if(!conn.getAutoCommit()){
+                conn.commit();
+            }
+        return true;
+
+        } catch(SQLException e){
+          System.out.println(e);
+            return false;
+        }
+      }
+      return false;
+    }
 }
