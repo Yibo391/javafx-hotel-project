@@ -1,2 +1,2 @@
-rifai/App.java
- rifai.App
+hotelproject/HotelProject.java
+ hotelproject.HotelProject
