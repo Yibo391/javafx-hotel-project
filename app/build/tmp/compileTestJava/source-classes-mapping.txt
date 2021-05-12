@@ -1,2 +1,0 @@
-rifai/AppTest.java
- rifai.AppTest
