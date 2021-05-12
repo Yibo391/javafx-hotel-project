@@ -30,6 +30,7 @@ import javafx.scene.layout.GridPane;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Text;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ListView;
@@ -173,6 +174,15 @@ public class Controller
 
   @FXML
   public DatePicker bToDate;
+
+  @FXML
+  public DatePicker roombook;
+
+  @FXML
+  public ChoiceBox<String> obookingfilter;
+
+  @FXML
+  public TextField obookingfiltersearch;
 
   public boolean isNumeric(String s) {  
     return s != null && s.matches("[-+]?\\d*\\.?\\d+");  
@@ -454,6 +464,12 @@ public class Controller
     } else {
     }
 
+    } else {
+      Alert alert = new Alert(AlertType.ERROR);
+      alert.setTitle("Room Deletion Error");
+      alert.setHeaderText(null);
+      alert.setContentText("You have not selected a room.");
+      alert.showAndWait();
     }
   }
 
@@ -729,6 +745,68 @@ DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.US);
 	}catch (Exception e) {
 		e.printStackTrace();
 		}
+	}
+
+  public void handleBookingFilterKey(ActionEvent event) {
+    String bookIdQuery = "\0";
+    try{
+    PreparedStatement stat = handler.getLink().prepareStatement(bookIdQuery);
+    System.out.println(obookingfiltersearch.getText().length());
+    if(obookingfilter.getValue().equals("Room Number")){
+      ebookinglist.getItems().clear();
+      if(obookingfiltersearch.getText().length()>0){
+        System.out.println("ui");
+      bookIdQuery = "SELECT * FROM bookings WHERE Room LIKE ?";
+      stat = handler.getLink().prepareStatement(bookIdQuery);
+      stat.setString(1, obookingfiltersearch.getText());
+      } else {
+        System.out.println("e");
+      bookIdQuery = "SELECT * FROM bookings";
+      stat = handler.getLink().prepareStatement(bookIdQuery);
+      }
+        ResultSet BookIDList= stat.executeQuery();
+        Statement statement = (handler.getLink()).createStatement();
+        while (BookIDList.next()) {
+          String name = "\0";
+          String customerNameQuery = "SELECT firstname, lastname FROM customer WHERE ID ='"+BookIDList.getString("Customer")+"'";
+          ResultSet Customers= statement.executeQuery(customerNameQuery);
+          while(Customers.next()){
+            name = Customers.getString("firstname") + " " + Customers.getString("lastname");
+          }
+          String entry = BookIDList.getString("ID") + ". " + "Room " + BookIDList.getString("Room") + ", " + name + ", " + BookIDList.getString("bFrom") + " -> " + BookIDList.getString("bTo");
+          ebookinglist.getItems().add(entry);  
+        }
+
+    } else if(obookingfilter.getValue().equals("Customer")){
+      ebookinglist.getItems().clear();
+      if(obookingfiltersearch.getText().length()>0){
+        System.out.println("ui");
+      bookIdQuery = "SELECT * FROM bookings WHERE Room LIKE ?";
+      stat = handler.getLink().prepareStatement(bookIdQuery);
+      stat.setString(1, obookingfiltersearch.getText());
+      } else {
+        System.out.println("e");
+      bookIdQuery = "SELECT * FROM bookings";
+      stat = handler.getLink().prepareStatement(bookIdQuery);
+      }
+        ResultSet BookIDList= stat.executeQuery();
+        Statement statement = (handler.getLink()).createStatement();
+        while (BookIDList.next()) {
+          String name = "\0";
+          String customerNameQuery = "SELECT firstname, lastname FROM customer WHERE ID ='"+BookIDList.getString("Customer")+"'";
+          ResultSet Customers= statement.executeQuery(customerNameQuery);
+          while(Customers.next()){
+            name = Customers.getString("firstname") + " " + Customers.getString("lastname");
+          }
+          String entry = BookIDList.getString("ID") + ". " + "Room " + BookIDList.getString("Room") + ", " + name + ", " + BookIDList.getString("bFrom") + " -> " + BookIDList.getString("bTo");
+          ebookinglist.getItems().add(entry);  
+        }
+
+    }
+  } catch (Exception e){
+    System.out.println(e);
+
+  }
 	}
 
     public void handleBookingView(MouseEvent event) {

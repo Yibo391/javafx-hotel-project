@@ -3,6 +3,7 @@
 <?import javafx.collections.FXCollections?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -13,7 +14,7 @@
 
 <AnchorPane prefHeight="514.0" prefWidth="500.0" styleClass="background" stylesheets="@pbg.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hotelproject.Controller">
    <children>
-      <VBox layoutX="109.0" layoutY="225.0" prefHeight="243.0" prefWidth="174.0">
+      <VBox layoutX="109.0" layoutY="225.0" prefHeight="126.0" prefWidth="174.0">
          <children>
             <Label text="ROOM">
                <font>
@@ -31,16 +32,6 @@
                </font>
             </Label>
             <Label text="Size:">
-               <font>
-                  <Font size="16.0" />
-               </font>
-            </Label>
-            <Label text="Booked from">
-               <font>
-                  <Font size="16.0" />
-               </font>
-            </Label>
-            <Label text="Booked to">
                <font>
                   <Font size="16.0" />
                </font>
@@ -65,16 +56,6 @@
                </font>
             </Label>
             <Label fx:id="sizeLebel" prefHeight="26.0" prefWidth="161.0" text=" ">
-               <font>
-                  <Font size="16.0" />
-               </font>
-            </Label>
-            <Label fx:id="bookedfromLebel" prefHeight="26.0" prefWidth="149.0">
-               <font>
-                  <Font size="16.0" />
-               </font>
-            </Label>
-            <Label fx:id="bookedtoLevel" prefHeight="26.0" prefWidth="145.0">
                <font>
                   <Font size="16.0" />
                </font>
@@ -111,5 +92,11 @@
             <Font name="Arial Narrow Bold" size="23.0" />
          </font>
       </Button>
+      <DatePicker fx:id="roombook" layoutX="85.0" layoutY="412.0" promptText="Bookings" />
+      <Label layoutX="72.0" layoutY="375.0" text="Bookings for this room">
+         <font>
+            <Font name="Arial Narrow Bold" size="22.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>
