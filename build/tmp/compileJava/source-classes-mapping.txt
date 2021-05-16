@@ -22,8 +22,6 @@ hotelproject/NewBookingDialog.java
  hotelproject.NewBookingDialog
 hotelproject/module-info.java
  module-info
-hotelproject/A.java
- hotelproject.A
 hotelproject/EditRoomDialog.java
  hotelproject.EditRoomDialog
 hotelproject/Validator.java
