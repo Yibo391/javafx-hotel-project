@@ -5,6 +5,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.PasswordField;
+import java.io.*;
 import javafx.event.ActionEvent;
 import javafx.scene.input.MouseEvent;
 import java.net.URL;
@@ -751,7 +752,6 @@ DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.US);
     String bookIdQuery = "\0";
     try{
     PreparedStatement stat = handler.getLink().prepareStatement(bookIdQuery);
-    System.out.println(obookingfiltersearch.getText().length());
     if(obookingfilter.getValue().equals("Room Number")){
       ebookinglist.getItems().clear();
       if(obookingfiltersearch.getText().length()>0){
@@ -777,30 +777,42 @@ DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.US);
           ebookinglist.getItems().add(entry);  
         }
 
-    } else if(obookingfilter.getValue().equals("Customer")){
+    } else if(obookingfilter.getValue().equals("Payment status")){
       ebookinglist.getItems().clear();
+      String crit = "\0";
       if(obookingfiltersearch.getText().length()>0){
-        System.out.println("ui");
-      bookIdQuery = "SELECT * FROM bookings WHERE Room LIKE ?";
-      stat = handler.getLink().prepareStatement(bookIdQuery);
-      stat.setString(1, obookingfiltersearch.getText());
-      } else {
-        System.out.println("e");
-      bookIdQuery = "SELECT * FROM bookings";
-      stat = handler.getLink().prepareStatement(bookIdQuery);
-      }
-        ResultSet BookIDList= stat.executeQuery();
-        Statement statement = (handler.getLink()).createStatement();
-        while (BookIDList.next()) {
-          String name = "\0";
-          String customerNameQuery = "SELECT firstname, lastname FROM customer WHERE ID ='"+BookIDList.getString("Customer")+"'";
-          ResultSet Customers= statement.executeQuery(customerNameQuery);
-          while(Customers.next()){
-            name = Customers.getString("firstname") + " " + Customers.getString("lastname");
-          }
-          String entry = BookIDList.getString("ID") + ". " + "Room " + BookIDList.getString("Room") + ", " + name + ", " + BookIDList.getString("bFrom") + " -> " + BookIDList.getString("bTo");
-          ebookinglist.getItems().add(entry);  
+        if(obookingfiltersearch.getText().toLowerCase().equals("yes")){
+          crit = "1";
+        } else if(obookingfiltersearch.getText().toLowerCase().equals("no")){
+          crit = "0";
+        } else {
+          Alert alert = new Alert(AlertType.ERROR);
+          alert.setTitle("Booking Manager Error");
+          alert.setHeaderText(null);
+          alert.setContentText("The keyword for booking payment status can only be \"yes\" or \"no\".");
+          alert.showAndWait();
         }
+        bookIdQuery = "SELECT * FROM bookings WHERE PAID LIKE ?";
+        stat = handler.getLink().prepareStatement(bookIdQuery);
+        stat.setString(1, crit);
+    } else {
+    bookIdQuery = "SELECT * FROM bookings";
+    stat = handler.getLink().prepareStatement(bookIdQuery);
+    }
+      System.out.println(crit);
+      ResultSet BookIDList= stat.executeQuery();
+      Statement statement = (handler.getLink()).createStatement();
+      while (BookIDList.next()) {
+        String name = "\0";
+        String customerNameQuery = "SELECT firstname, lastname FROM customer WHERE ID ='"+BookIDList.getString("Customer")+"'";
+        ResultSet Customers= statement.executeQuery(customerNameQuery);
+        while(Customers.next()){
+          name = Customers.getString("firstname") + " " + Customers.getString("lastname");
+        }
+        String entry = BookIDList.getString("ID") + ". " + "Room " + BookIDList.getString("Room") + ", " + name + ", " + BookIDList.getString("bFrom") + " -> " + BookIDList.getString("bTo");
+        ebookinglist.getItems().add(entry);  
+      }
+
 
     }
   } catch (Exception e){
