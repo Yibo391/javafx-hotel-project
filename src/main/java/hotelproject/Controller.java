@@ -812,8 +812,28 @@ DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.US);
         String entry = BookIDList.getString("ID") + ". " + "Room " + BookIDList.getString("Room") + ", " + name + ", " + BookIDList.getString("bFrom") + " -> " + BookIDList.getString("bTo");
         ebookinglist.getItems().add(entry);  
       }
-
-
+    }  else if(obookingfilter.getValue().equals("Customer")){
+      ebookinglist.getItems().clear();
+    bookIdQuery = "SELECT * FROM bookings";
+    stat = handler.getLink().prepareStatement(bookIdQuery);
+      ResultSet BookIDList= stat.executeQuery();
+      Statement statement = (handler.getLink()).createStatement();
+      while (BookIDList.next()) {
+        String name = "\0";
+        String customerNameQuery = "SELECT firstname, lastname FROM customer WHERE ID ='"+BookIDList.getString("Customer")+"'";
+        ResultSet Customers= statement.executeQuery(customerNameQuery);
+        while(Customers.next()){
+          name = Customers.getString("firstname") + " " + Customers.getString("lastname");
+        }
+        String entry = BookIDList.getString("ID") + ". " + "Room " + BookIDList.getString("Room") + ", " + name + ", " + BookIDList.getString("bFrom") + " -> " + BookIDList.getString("bTo");
+        if(obookingfiltersearch.getText().length()>0){
+        if (name.toLowerCase().contains(obookingfiltersearch.getText().toLowerCase())){
+        ebookinglist.getItems().add(entry);  
+        }
+        } else {
+        ebookinglist.getItems().add(entry);  
+        }
+      }
     }
   } catch (Exception e){
     System.out.println(e);
