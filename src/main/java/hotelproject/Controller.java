@@ -27,6 +27,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.ChoiceBox;
 import java.util.Locale;
+import java.util.GregorianCalendar;
 import javafx.scene.layout.GridPane;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -88,6 +89,12 @@ public class Controller
 
   @FXML
   public Label bCustomerLabel;
+
+  @FXML
+  public DatePicker odatefilter;
+
+  @FXML
+  public ChoiceBox<String> obookingpaychoice;
 
   @FXML
   public Label bPaidLabel;
@@ -188,6 +195,13 @@ public class Controller
   public boolean isNumeric(String s) {  
     return s != null && s.matches("[-+]?\\d*\\.?\\d+");  
   }  
+
+  int doy(String s){
+    String[] splitter = s.split("-");
+    LocalDate selector = LocalDate.of(Integer.valueOf(splitter[0]), Integer.valueOf(splitter[1]), Integer.valueOf(splitter[2]));
+    int doy = selector.getDayOfYear();
+    return doy;
+  }
 
   @FXML protected void handleSigninButton(ActionEvent event) throws Exception {
     try{
@@ -718,6 +732,89 @@ DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.US);
 		}
 	}
 
+  public void handleFilterChoiceChanged(ActionEvent event) {
+    if(obookingfilter.getValue().equals("Date")){
+      odatefilter.setVisible(true);
+      obookingpaychoice.setVisible(false);
+      obookingfiltersearch.setVisible(false);
+    } else if(obookingfilter.getValue().equals("Payment status")){
+      odatefilter.setVisible(false);
+      obookingfiltersearch.setVisible(false);
+      obookingpaychoice.setVisible(true);
+    } else {
+      odatefilter.setVisible(false);
+      obookingfiltersearch.setVisible(true);
+      obookingpaychoice.setVisible(false);
+    }
+	}
+
+  public void handleBookingDateFilter(ActionEvent event) {
+    try{
+    DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.US);
+    String select = odatefilter.getValue().format(df);
+      ebookinglist.getItems().clear();
+      String bookIdQuery = "SELECT * FROM bookings";
+      PreparedStatement stat = handler.getLink().prepareStatement(bookIdQuery);
+      stat = handler.getLink().prepareStatement(bookIdQuery);
+        ResultSet BookIDList= stat.executeQuery();
+        Statement statement = (handler.getLink()).createStatement();
+        while (BookIDList.next()) {
+          String name = "\0";
+          String customerNameQuery = "SELECT firstname, lastname FROM customer WHERE ID ='"+BookIDList.getString("Customer")+"'";
+          ResultSet Customers= statement.executeQuery(customerNameQuery);
+          while(Customers.next()){
+            name = Customers.getString("firstname") + " " + Customers.getString("lastname");
+          }
+          int current = doy(select);
+          String entry = BookIDList.getString("ID") + ". " + "Room " + BookIDList.getString("Room") + ", " + name + ", " + BookIDList.getString("bFrom") + " -> " + BookIDList.getString("bTo");
+          if((current>=doy(BookIDList.getString("bFrom"))) && (current<=doy(BookIDList.getString("bTo")))){
+          ebookinglist.getItems().add(entry);  
+          }
+        } 
+      } catch(Exception e){
+
+      }
+
+	}
+
+  public void handleBPayChoice(ActionEvent event) {
+    try{
+    String bookIdQuery = "\0";
+    PreparedStatement stat = handler.getLink().prepareStatement(bookIdQuery);
+    ebookinglist.getItems().clear();
+    String crit = "\0";
+      if(obookingpaychoice.getValue().equals("Paid")){
+        crit = "1";
+        bookIdQuery = "SELECT * FROM bookings WHERE PAID LIKE ?";
+        stat = handler.getLink().prepareStatement(bookIdQuery);
+        stat.setString(1, crit);
+      } else if(obookingpaychoice.getValue().equals("Unpaid")){
+        crit = "0";
+        bookIdQuery = "SELECT * FROM bookings WHERE PAID LIKE ?";
+        stat = handler.getLink().prepareStatement(bookIdQuery);
+        stat.setString(1, crit);
+      } else {
+        bookIdQuery = "SELECT * FROM bookings";
+        stat = handler.getLink().prepareStatement(bookIdQuery);
+      }
+    System.out.println(crit);
+    ResultSet BookIDList= stat.executeQuery();
+    Statement statement = (handler.getLink()).createStatement();
+    while (BookIDList.next()) {
+      String name = "\0";
+      String customerNameQuery = "SELECT firstname, lastname FROM customer WHERE ID ='"+BookIDList.getString("Customer")+"'";
+      ResultSet Customers= statement.executeQuery(customerNameQuery);
+      while(Customers.next()){
+        name = Customers.getString("firstname") + " " + Customers.getString("lastname");
+      }
+      String entry = BookIDList.getString("ID") + ". " + "Room " + BookIDList.getString("Room") + ", " + name + ", " + BookIDList.getString("bFrom") + " -> " + BookIDList.getString("bTo");
+      ebookinglist.getItems().add(entry);  
+    }
+  } catch(Exception e){
+    System.out.println(e);
+  }
+	}
+
   public void handleRoomComboBox(ActionEvent event) {
 		String roomID = eroomid.getValue();
 		String roomDetailQuery ="SELECT * FROM room where room_number="+roomID;
@@ -778,40 +875,7 @@ DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.US);
         }
 
     } else if(obookingfilter.getValue().equals("Payment status")){
-      ebookinglist.getItems().clear();
-      String crit = "\0";
-      if(obookingfiltersearch.getText().length()>0){
-        if(obookingfiltersearch.getText().toLowerCase().equals("yes")){
-          crit = "1";
-        } else if(obookingfiltersearch.getText().toLowerCase().equals("no")){
-          crit = "0";
-        } else {
-          Alert alert = new Alert(AlertType.ERROR);
-          alert.setTitle("Booking Manager Error");
-          alert.setHeaderText(null);
-          alert.setContentText("The keyword for booking payment status can only be \"yes\" or \"no\".");
-          alert.showAndWait();
-        }
-        bookIdQuery = "SELECT * FROM bookings WHERE PAID LIKE ?";
-        stat = handler.getLink().prepareStatement(bookIdQuery);
-        stat.setString(1, crit);
-    } else {
-    bookIdQuery = "SELECT * FROM bookings";
-    stat = handler.getLink().prepareStatement(bookIdQuery);
-    }
-      System.out.println(crit);
-      ResultSet BookIDList= stat.executeQuery();
-      Statement statement = (handler.getLink()).createStatement();
-      while (BookIDList.next()) {
-        String name = "\0";
-        String customerNameQuery = "SELECT firstname, lastname FROM customer WHERE ID ='"+BookIDList.getString("Customer")+"'";
-        ResultSet Customers= statement.executeQuery(customerNameQuery);
-        while(Customers.next()){
-          name = Customers.getString("firstname") + " " + Customers.getString("lastname");
-        }
-        String entry = BookIDList.getString("ID") + ". " + "Room " + BookIDList.getString("Room") + ", " + name + ", " + BookIDList.getString("bFrom") + " -> " + BookIDList.getString("bTo");
-        ebookinglist.getItems().add(entry);  
-      }
+
     }  else if(obookingfilter.getValue().equals("Customer")){
       ebookinglist.getItems().clear();
     bookIdQuery = "SELECT * FROM bookings";
