@@ -30,5 +30,7 @@ hotelproject/SQLHandler.java
  hotelproject.SQLHandler
 hotelproject/Controller.java
  hotelproject.Controller
+ hotelproject.Controller$1
+ hotelproject.Controller$2
 hotelproject/EditProfileDialog.java
  hotelproject.EditProfileDialog

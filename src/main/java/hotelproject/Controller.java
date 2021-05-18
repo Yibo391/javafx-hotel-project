@@ -10,12 +10,22 @@ import javafx.event.ActionEvent;
 import javafx.scene.input.MouseEvent;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.ArrayList;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import javafx.scene.control.ButtonType;
 import java.util.Optional;
+import javafx.scene.control.DateCell;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import javafx.util.Callback;
 import javafx.scene.control.Dialog;
 import java.time.LocalDate;
+import java.time.Year;
+import java.time.chrono.ChronoLocalDate;
+import javafx.scene.control.Tooltip;
 import java.time.format.DateTimeFormatter;
 import javafx.scene.control.DatePicker;
 import java.sql.PreparedStatement;
@@ -28,6 +38,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.ChoiceBox;
 import java.util.Locale;
 import java.util.GregorianCalendar;
+import java.util.Calendar;
 import javafx.scene.layout.GridPane;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -53,6 +64,9 @@ import javafx.stage.Stage;
 
 public class Controller
 {
+
+ArrayList<ChronoLocalDate> fredlist = new ArrayList<ChronoLocalDate>();
+ArrayList<ChronoLocalDate> tredlist = new ArrayList<ChronoLocalDate>();
   SQLHandler handler = new SQLHandler();
   
   static String username = "";
@@ -196,11 +210,82 @@ public class Controller
     return s != null && s.matches("[-+]?\\d*\\.?\\d+");  
   }  
 
+
+  void triggerBookingDates(){
+    fredlist.clear();
+    tredlist.clear();
+    bFromDate.setDisable(false);
+    try{
+      DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.US);
+        String bookIdQuery = "SELECT * FROM bookings WHERE Room = ?";
+        PreparedStatement stat = handler.getLink().prepareStatement(bookIdQuery);
+        stat = handler.getLink().prepareStatement(bookIdQuery);
+        stat.setString(1, bRoomSel.getValue());
+        System.out.println(stat);
+          ResultSet BookIDList= stat.executeQuery();
+          Statement statement = (handler.getLink()).createStatement();
+          while (BookIDList.next()) {
+            int from = doy(BookIDList.getString("bFrom"));
+            int to = doy(BookIDList.getString("bTo"));
+            Boolean done = false;
+            LocalDate i = LocalDate.parse(BookIDList.getString("bFrom"), df);
+            Calendar c = Calendar.getInstance();
+            String[] splitter = BookIDList.getString("bFrom").split("-");
+            if (Integer.valueOf(splitter[1])<9){
+              String temp = "0"+splitter[1];
+              splitter[1] = temp;
+            } 
+            c.set(Integer.valueOf(splitter[0]), Integer.valueOf(splitter[1]), Integer.valueOf(splitter[2]));
+            while(!fredlist.contains(LocalDate.parse(BookIDList.getString("bTo"), df))){
+            c.add(Calendar.DATE, 1);
+            String temp = "\0";
+            String prMonth = String.valueOf(c.get(Calendar.MONTH));
+            String prDay=String.valueOf(c.get(Calendar.DATE));
+            if(Integer.valueOf(c.get(Calendar.MONTH))<=9){
+            temp = "0" + c.get(Calendar.MONTH);
+            prMonth = temp;
+            }
+            if(Integer.valueOf(c.get(Calendar.DATE))<=9){
+              temp = "0" + c.get(Calendar.DATE);
+              prDay = temp;
+              }
+            if(Integer.valueOf(c.get(Calendar.MONTH))==0)
+            prMonth = "01";
+            temp = c.get(Calendar.YEAR)+"-"+prMonth+"-"+prDay;
+            i = LocalDate.parse(temp, df); 
+            fredlist.add(i);
+            }
+          } 
+        } catch(Exception e){
+          System.out.println(e);
+        }
+        System.out.println(fredlist);
+bToDate.setDayCellFactory(d ->
+           new DateCell() {
+               @Override public void updateItem(LocalDate item, boolean empty) {
+                   super.updateItem(item, empty);
+                   setDisable(item.isAfter(fredlist.get(0)) || item.isBefore(bFromDate.getValue()) || item == fredlist.get(0));
+               }});
+
+               bFromDate.setDayCellFactory(d ->
+               new DateCell() {
+                   @Override public void updateItem(LocalDate item, boolean empty) {
+                       super.updateItem(item, empty);
+                       setDisable(fredlist.contains(item));
+                   }});
+  }
+
   int doy(String s){
     String[] splitter = s.split("-");
     LocalDate selector = LocalDate.of(Integer.valueOf(splitter[0]), Integer.valueOf(splitter[1]), Integer.valueOf(splitter[2]));
     int doy = selector.getDayOfYear();
     return doy;
+  }
+
+  String daytodate(int s, int year){
+    DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.US);
+    LocalDate selector = Year.of(year).atDay(s);
+    return selector.format(df);
   }
 
   @FXML protected void handleSigninButton(ActionEvent event) throws Exception {
@@ -566,7 +651,7 @@ public class Controller
 
   @FXML protected void handleSubmitBookingButton(ActionEvent event) throws Exception {   
     DatePicker mrgRqstDate = new DatePicker();
-DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.US);
+    DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.US);
     String fromDate = bFromDate.getValue().format(df);
     String toDate = bToDate.getValue().format(df);
     String s = "\0";
@@ -747,6 +832,22 @@ DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.US);
       obookingpaychoice.setVisible(false);
     }
 	}
+
+  public void handleRoomChosen(ActionEvent event){
+    if (bBookingCustomer.getValue()!=null){
+      triggerBookingDates();
+    }
+  }
+
+  public void handlebFromDate(ActionEvent event){
+    bToDate.setDisable(false);
+  }
+
+  public void handleCustomerChosen(ActionEvent event){
+    if (bRoomSel.getValue()!=null){
+      triggerBookingDates();
+    }
+  }
 
   public void handleBookingDateFilter(ActionEvent event) {
     try{
