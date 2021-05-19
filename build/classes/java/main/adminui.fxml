@@ -54,41 +54,46 @@
                   <Font name="Arial Black" size="27.0" />
                </font>
             </Button>
-            <Button layoutY="232.0" mnemonicParsing="false" prefHeight="68.0" prefWidth="281.0" stylesheets="@button.css" text="Edit room" textFill="#231d5b" onAction="#handleEditRoomButton">
+            <Button layoutX="-35.0" layoutY="232.0" mnemonicParsing="false" onAction="#handleEditRoomButton" prefHeight="68.0" prefWidth="281.0" stylesheets="@button.css" text="Edit room" textFill="#231d5b">
                <font>
                   <Font name="Arial Black" size="27.0" />
                </font>
             </Button>
-            <Button layoutX="158.0" layoutY="368.0" mnemonicParsing="false" prefHeight="68.0" prefWidth="281.0" stylesheets="@button.css" text="Edit personnel" textFill="#231d5b">
+            <Button layoutY="368.0" mnemonicParsing="false" prefHeight="68.0" prefWidth="281.0" stylesheets="@button.css" text="Edit personnel" textFill="#231d5b">
                <font>
                   <Font name="Arial Black" size="27.0" />
                </font>
             </Button>
-            <Button layoutX="298.0" layoutY="164.0" mnemonicParsing="false" prefHeight="68.0" prefWidth="296.0" stylesheets="@button.css" text="Add booking" textFill="#231d5b" onAction="#handleCreateBookingButton">
+            <Button layoutX="267.0" layoutY="164.0" mnemonicParsing="false" onAction="#handleCreateBookingButton" prefHeight="68.0" prefWidth="296.0" stylesheets="@button.css" text="Add booking" textFill="#231d5b">
                <font>
                   <Font name="Arial Black" size="27.0" />
                </font>
             </Button>
-            <Button layoutX="306.0" layoutY="300.0" mnemonicParsing="false" onAction="#handleAddUserButton" prefHeight="68.0" prefWidth="281.0" stylesheets="@button.css" text="Add user" textFill="#231d5b">
+            <Button layoutX="246.0" layoutY="300.0" mnemonicParsing="false" onAction="#handleAddUserButton" prefHeight="68.0" prefWidth="281.0" stylesheets="@button.css" text="Add user" textFill="#231d5b">
                <font>
                   <Font name="Arial Black" size="27.0" />
                </font>
             </Button>
-            <Button layoutY="300.0" mnemonicParsing="false" onAction="#handleViewRoomButton" prefHeight="68.0" prefWidth="281.0" stylesheets="@button.css" text="Room overview" textFill="#231d5b">
+            <Button layoutX="6.0" layoutY="300.0" mnemonicParsing="false" onAction="#handleViewRoomButton" prefHeight="68.0" prefWidth="281.0" stylesheets="@button.css" text="Room overview" textFill="#231d5b">
                <font>
                   <Font name="Arial Black" size="27.0" />
                </font>
             </Button>
-            <Button layoutX="298.0" layoutY="232.0" mnemonicParsing="false" prefHeight="68.0" prefWidth="296.0" stylesheets="@button.css" text="Manage bookings" textFill="#231d5b" onAction="#handleManageBookingsButton">
+            <Button layoutX="298.0" layoutY="232.0" mnemonicParsing="false" onAction="#handleManageBookingsButton" prefHeight="68.0" prefWidth="296.0" stylesheets="@button.css" text="Manage bookings" textFill="#231d5b">
                <font>
                   <Font name="Arial Black" size="27.0" />
                </font>
             </Button>
-            <Text fill="#000340" layoutX="315.0" layoutY="61.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Administration Panel">
+            <Text fill="#000340" layoutX="176.0" layoutY="134.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Administration Panel">
                <font>
                   <Font name="Arial" size="27.0" />
                </font>
             </Text>
+            <Button layoutX="298.0" layoutY="368.0" mnemonicParsing="false" onAction="#handleEditProfileButton" prefHeight="68.0" prefWidth="281.0" stylesheets="@button.css" text="Edit credentials" textFill="#231d5b">
+               <font>
+                  <Font name="Arial Black" size="27.0" />
+               </font>
+            </Button>
          </children>
     </AnchorPane>
   </children>

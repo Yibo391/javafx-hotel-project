@@ -1,2 +1,7 @@
+<<<<<<< HEAD
 hotelproject/AppTest.java
  hotelproject.AppTest
+=======
+rifai/AppTest.java
+ rifai.AppTest
+>>>>>>> cb7b72eded3a94e3bbafa9f91e90269debe33eae
