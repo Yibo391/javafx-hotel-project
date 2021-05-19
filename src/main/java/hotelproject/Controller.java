@@ -66,7 +66,7 @@ public class Controller
 {
 
 ArrayList<ChronoLocalDate> fredlist = new ArrayList<ChronoLocalDate>();
-ArrayList<ChronoLocalDate> tredlist = new ArrayList<ChronoLocalDate>();
+
   SQLHandler handler = new SQLHandler();
   
   static String username = "";
@@ -213,10 +213,9 @@ ArrayList<ChronoLocalDate> tredlist = new ArrayList<ChronoLocalDate>();
 
   void triggerBookingDates(){
     fredlist.clear();
-    tredlist.clear();
     bFromDate.setDisable(false);
+    DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.US);
     try{
-      DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.US);
         String bookIdQuery = "SELECT * FROM bookings WHERE Room = ?";
         PreparedStatement stat = handler.getLink().prepareStatement(bookIdQuery);
         stat = handler.getLink().prepareStatement(bookIdQuery);
@@ -234,7 +233,11 @@ ArrayList<ChronoLocalDate> tredlist = new ArrayList<ChronoLocalDate>();
             if (Integer.valueOf(splitter[1])<9){
               String temp = "0"+splitter[1];
               splitter[1] = temp;
-            } 
+            }
+            if (Integer.valueOf(splitter[2])<9){
+              String temp = "0"+splitter[2];
+              splitter[2] = temp;
+            }
             c.set(Integer.valueOf(splitter[0]), Integer.valueOf(splitter[1]), Integer.valueOf(splitter[2]));
             while(!fredlist.contains(LocalDate.parse(BookIDList.getString("bTo"), df))){
             c.add(Calendar.DATE, 1);
@@ -254,17 +257,36 @@ ArrayList<ChronoLocalDate> tredlist = new ArrayList<ChronoLocalDate>();
             temp = c.get(Calendar.YEAR)+"-"+prMonth+"-"+prDay;
             i = LocalDate.parse(temp, df); 
             fredlist.add(i);
+            fredlist.add(i.minusDays(1));
             }
           } 
         } catch(Exception e){
           System.out.println(e);
         }
+        Calendar c = Calendar.getInstance();
+        String[] splitter = fredlist.get(0).format(df).split("-");
+        c.set(Integer.valueOf(splitter[0]), Integer.valueOf(splitter[1]), Integer.valueOf(splitter[2]));
+        String temp = "\0";
+        String prMonth = String.valueOf(c.get(Calendar.MONTH));
+        String prDay=String.valueOf(c.get(Calendar.DATE));
+        if(Integer.valueOf(c.get(Calendar.MONTH))<=9){
+        temp = "0" + c.get(Calendar.MONTH);
+        prMonth = temp;
+        }
+        if(Integer.valueOf(c.get(Calendar.DATE))<=9){
+          temp = "0" + c.get(Calendar.DATE);
+          prDay = temp;
+          }
+        if(Integer.valueOf(c.get(Calendar.MONTH))==0)
+        prMonth = "01";
+        temp = c.get(Calendar.YEAR)+"-"+prMonth+"-"+prDay;
+        fredlist.add(0, LocalDate.parse(temp, df).minusDays(1));
         System.out.println(fredlist);
 bToDate.setDayCellFactory(d ->
            new DateCell() {
                @Override public void updateItem(LocalDate item, boolean empty) {
                    super.updateItem(item, empty);
-                   setDisable(item.isAfter(fredlist.get(0)) || item.isBefore(bFromDate.getValue()) || item == fredlist.get(0));
+                   setDisable(((item.isAfter(fredlist.get(0))) && !bFromDate.getValue().isBefore(item)) || item.isBefore(bFromDate.getValue()) || item.equals(fredlist.get(0)) || fredlist.contains(item) || ((item.isAfter(fredlist.get(fredlist.size() - 1))) && (fredlist.get(fredlist.size() - 1)).isAfter(bFromDate.getValue())));
                }});
 
                bFromDate.setDayCellFactory(d ->
