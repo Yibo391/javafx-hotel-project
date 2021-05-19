@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="514.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.roomDetailControl">
+   <children>
+      <ComboBox fx:id="roomDetailComboBox" layoutX="313.0" layoutY="84.0" onAction="#handleComboBox" prefWidth="150.0" />
+      <TextField layoutX="50.0" layoutY="86.0" prefHeight="28.0" prefWidth="224.0" text="To see room detail,select room" />
+      <VBox layoutX="140.0" layoutY="166.0" prefHeight="243.0" prefWidth="174.0">
+         <children>
+            <Label text="ROOM">
+               <font>
+                  <Font size="22.0" />
+               </font>
+            </Label>
+            <Label text="Bed Type: ">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <Label prefHeight="26.0" prefWidth="74.0" text="Price  :">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <Label text="Floor:">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <Label text="Size">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <Label text="Maximum Occupant">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <Label text="Booked From">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <Label text="Booked To">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+         </children>
+      </VBox>
+      <VBox layoutX="320.0" layoutY="194.0" prefHeight="194.0" prefWidth="143.0">
+         <children>
+            <Label fx:id="bedtypeLabel" prefHeight="26.0" prefWidth="151.0">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <Label fx:id="priceLebel" prefHeight="26.0" prefWidth="161.0">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <Label fx:id="floorLebel" prefHeight="26.0" prefWidth="147.0">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <Label fx:id="sizeLebel" prefHeight="26.0" prefWidth="161.0" text=" ">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <Label fx:id="maximumoccupantLebel" prefHeight="26.0" prefWidth="154.0">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <Label fx:id="bookedfromLebel" prefHeight="26.0" prefWidth="149.0">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <Label fx:id="bookedtoLevel" prefHeight="26.0" prefWidth="145.0">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>
