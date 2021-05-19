@@ -46,22 +46,6 @@ public class EditProfileDialog extends Application {
      TextField user = (TextField) scene.lookup("#nusrb");
 		 TextField passw = (TextField) scene.lookup("#npswb");
 		 user.setText(Controller.getUsername());
-		 String passquery = "SELECT password FROM user WHERE account=?";
-		 try {
-			PreparedStatement ps = handler.getLink().prepareStatement(passquery);
-			ps.setString(1,Controller.getUsername());
-			System.out.println(Controller.getUsername());
-			System.out.println(ps);
-			ResultSet pass = ps.executeQuery();
-			String pw = "\0";
-			while (pass.next()) {
-			  pw = pass.getString(1);
-			}
-			passw.setText(pw);
-			System.out.println(pw);
-	} catch (Exception e) {
-		e.printStackTrace();
-		}
      
   }
 }

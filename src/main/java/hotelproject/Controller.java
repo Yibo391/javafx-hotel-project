@@ -315,11 +315,8 @@ bToDate.setDayCellFactory(d ->
       StaffUi ui = new StaffUi();
       ui.start(launcher.stage);
     } else if((Validator.checkLogin(initUI(usertext, passtext))).equals("Admin")){
-      AdminUi ui = new AdminUi();
-      ui.start(launcher.stage);
-    }  else if((Validator.checkLogin(initUI(usertext, passtext))).equals("Customer")){
       username = usertext.getText();
-      UserUi ui = new UserUi();
+      AdminUi ui = new AdminUi();
       ui.start(launcher.stage);
     }
    } catch(NullPointerException e){

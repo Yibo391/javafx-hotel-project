@@ -4,14 +4,14 @@ hotelproject/LoginDialog.java
  hotelproject.LoginDialog
 hotelproject/AdminUi.java
  hotelproject.AdminUi
-hotelproject/RoomDetailDialog.java
- hotelproject.RoomDetailDialog
+hotelproject/launcher.java
+ hotelproject.launcher
 hotelproject/NewUserDialog.java
  hotelproject.NewUserDialog
 hotelproject/Validator.java
  hotelproject.Validator
-hotelproject/BookingDetailDialog.java
- hotelproject.BookingDetailDialog
+hotelproject/module-info.java
+ module-info
 hotelproject/StaffUi.java
  hotelproject.StaffUi
 hotelproject/NewCustomerDialog.java
@@ -20,12 +20,8 @@ hotelproject/NewRoomDialog.java
  hotelproject.NewRoomDialog
 hotelproject/NewBookingDialog.java
  hotelproject.NewBookingDialog
-hotelproject/module-info.java
- module-info
 hotelproject/EditRoomDialog.java
  hotelproject.EditRoomDialog
-hotelproject/launcher.java
- hotelproject.launcher
 hotelproject/SQLHandler.java
  hotelproject.SQLHandler
 hotelproject/Controller.java
@@ -35,3 +31,7 @@ hotelproject/Controller.java
  hotelproject.Controller$3
 hotelproject/EditProfileDialog.java
  hotelproject.EditProfileDialog
+hotelproject/BookingDetailDialog.java
+ hotelproject.BookingDetailDialog
+hotelproject/RoomDetailDialog.java
+ hotelproject.RoomDetailDialog

@@ -92,7 +92,7 @@
             <Font name="Arial Narrow Bold" size="23.0" />
          </font>
       </Button>
-      <DatePicker fx:id="roombook" layoutX="85.0" layoutY="412.0" promptText="Bookings" />
+      <DatePicker fx:id="roombook" editable="false" layoutX="85.0" layoutY="412.0" promptText="Bookings" />
       <Label layoutX="72.0" layoutY="375.0" text="Bookings for this room">
          <font>
             <Font name="Arial Narrow Bold" size="22.0" />
