@@ -5,16 +5,27 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.PasswordField;
+import java.io.*;
 import javafx.event.ActionEvent;
 import javafx.scene.input.MouseEvent;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.ArrayList;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import javafx.scene.control.ButtonType;
 import java.util.Optional;
+import javafx.scene.control.DateCell;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import javafx.util.Callback;
 import javafx.scene.control.Dialog;
 import java.time.LocalDate;
+import java.time.Year;
+import java.time.chrono.ChronoLocalDate;
+import javafx.scene.control.Tooltip;
 import java.time.format.DateTimeFormatter;
 import javafx.scene.control.DatePicker;
 import java.sql.PreparedStatement;
@@ -26,10 +37,13 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.ChoiceBox;
 import java.util.Locale;
+import java.util.GregorianCalendar;
+import java.util.Calendar;
 import javafx.scene.layout.GridPane;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Text;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ListView;
@@ -50,6 +64,7 @@ import javafx.stage.Stage;
 
 public class Controller
 {
+
   SQLHandler handler = new SQLHandler();
   
   static String username = "";
@@ -86,6 +101,12 @@ public class Controller
 
   @FXML
   public Label bCustomerLabel;
+
+  @FXML
+  public DatePicker odatefilter;
+
+  @FXML
+  public ChoiceBox<String> obookingpaychoice;
 
   @FXML
   public Label bPaidLabel;
@@ -174,9 +195,118 @@ public class Controller
   @FXML
   public DatePicker bToDate;
 
+  @FXML
+  public DatePicker roombook;
+
+  @FXML
+  public ChoiceBox<String> obookingfilter;
+
+  @FXML
+  public TextField obookingfiltersearch;
+
   public boolean isNumeric(String s) {  
     return s != null && s.matches("[-+]?\\d*\\.?\\d+");  
   }  
+
+
+  void triggerBookingDates(){
+    ArrayList<ChronoLocalDate> fredlist = new ArrayList<ChronoLocalDate>();
+    bFromDate.setDisable(false);
+    DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.US);
+    try{
+        String bookIdQuery = "SELECT * FROM bookings WHERE Room = ?";
+        PreparedStatement stat = handler.getLink().prepareStatement(bookIdQuery);
+        stat = handler.getLink().prepareStatement(bookIdQuery);
+        stat.setString(1, bRoomSel.getValue());
+        System.out.println(stat);
+          ResultSet BookIDList= stat.executeQuery();
+          Statement statement = (handler.getLink()).createStatement();
+          while (BookIDList.next()) {
+            int from = doy(BookIDList.getString("bFrom"));
+            int to = doy(BookIDList.getString("bTo"));
+            Boolean done = false;
+            LocalDate i = LocalDate.parse(BookIDList.getString("bFrom"), df);
+            Calendar c = Calendar.getInstance();
+            String[] splitter = BookIDList.getString("bFrom").split("-");
+            if (Integer.valueOf(splitter[1])<9){
+              String temp = "0"+splitter[1];
+              splitter[1] = temp;
+            }
+            if (Integer.valueOf(splitter[2])<9){
+              String temp = "0"+splitter[2];
+              splitter[2] = temp;
+            }
+            c.set(Integer.valueOf(splitter[0]), Integer.valueOf(splitter[1]), Integer.valueOf(splitter[2]));
+            while(!fredlist.contains(LocalDate.parse(BookIDList.getString("bTo"), df))){
+            c.add(Calendar.DATE, 1);
+            String temp = "\0";
+            String prMonth = String.valueOf(c.get(Calendar.MONTH));
+            String prDay=String.valueOf(c.get(Calendar.DATE));
+            if(Integer.valueOf(c.get(Calendar.MONTH))<=9){
+            temp = "0" + c.get(Calendar.MONTH);
+            prMonth = temp;
+            }
+            if(Integer.valueOf(c.get(Calendar.DATE))<=9){
+              temp = "0" + c.get(Calendar.DATE);
+              prDay = temp;
+              }
+            if(Integer.valueOf(c.get(Calendar.MONTH))==0)
+            prMonth = "01";
+            temp = c.get(Calendar.YEAR)+"-"+prMonth+"-"+prDay;
+            i = LocalDate.parse(temp, df); 
+            fredlist.add(i);
+            fredlist.add(i.minusDays(1));
+            }
+          } 
+        } catch(Exception e){
+          System.out.println(e);
+        }
+        Calendar c = Calendar.getInstance();
+        String[] splitter = fredlist.get(0).format(df).split("-");
+        c.set(Integer.valueOf(splitter[0]), Integer.valueOf(splitter[1]), Integer.valueOf(splitter[2]));
+        String temp = "\0";
+        String prMonth = String.valueOf(c.get(Calendar.MONTH));
+        String prDay=String.valueOf(c.get(Calendar.DATE));
+        if(Integer.valueOf(c.get(Calendar.MONTH))<=9){
+        temp = "0" + c.get(Calendar.MONTH);
+        prMonth = temp;
+        }
+        if(Integer.valueOf(c.get(Calendar.DATE))<=9){
+          temp = "0" + c.get(Calendar.DATE);
+          prDay = temp;
+          }
+        if(Integer.valueOf(c.get(Calendar.MONTH))==0)
+        prMonth = "01";
+        temp = c.get(Calendar.YEAR)+"-"+prMonth+"-"+prDay;
+        fredlist.add(0, LocalDate.parse(temp, df).minusDays(1));
+        System.out.println(fredlist);
+bToDate.setDayCellFactory(d ->
+           new DateCell() {
+               @Override public void updateItem(LocalDate item, boolean empty) {
+                   super.updateItem(item, empty);
+                   setDisable(((item.isAfter(fredlist.get(0))) && !bFromDate.getValue().isBefore(item)) || item.isBefore(bFromDate.getValue()) || item.equals(fredlist.get(0)) || fredlist.contains(item) || ((item.isAfter(fredlist.get(fredlist.size() - 1))) && (fredlist.get(fredlist.size() - 1)).isAfter(bFromDate.getValue())));
+               }});
+
+               bFromDate.setDayCellFactory(d ->
+               new DateCell() {
+                   @Override public void updateItem(LocalDate item, boolean empty) {
+                       super.updateItem(item, empty);
+                       setDisable(fredlist.contains(item));
+                   }});
+  }
+
+  int doy(String s){
+    String[] splitter = s.split("-");
+    LocalDate selector = LocalDate.of(Integer.valueOf(splitter[0]), Integer.valueOf(splitter[1]), Integer.valueOf(splitter[2]));
+    int doy = selector.getDayOfYear();
+    return doy;
+  }
+
+  String daytodate(int s, int year){
+    DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.US);
+    LocalDate selector = Year.of(year).atDay(s);
+    return selector.format(df);
+  }
 
   @FXML protected void handleSigninButton(ActionEvent event) throws Exception {
     try{
@@ -185,11 +315,8 @@ public class Controller
       StaffUi ui = new StaffUi();
       ui.start(launcher.stage);
     } else if((Validator.checkLogin(initUI(usertext, passtext))).equals("Admin")){
-      AdminUi ui = new AdminUi();
-      ui.start(launcher.stage);
-    }  else if((Validator.checkLogin(initUI(usertext, passtext))).equals("Customer")){
       username = usertext.getText();
-      UserUi ui = new UserUi();
+      AdminUi ui = new AdminUi();
       ui.start(launcher.stage);
     }
    } catch(NullPointerException e){
@@ -454,6 +581,12 @@ public class Controller
     } else {
     }
 
+    } else {
+      Alert alert = new Alert(AlertType.ERROR);
+      alert.setTitle("Room Deletion Error");
+      alert.setHeaderText(null);
+      alert.setContentText("You have not selected a room.");
+      alert.showAndWait();
     }
   }
 
@@ -535,7 +668,7 @@ public class Controller
 
   @FXML protected void handleSubmitBookingButton(ActionEvent event) throws Exception {   
     DatePicker mrgRqstDate = new DatePicker();
-DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.US);
+    DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.US);
     String fromDate = bFromDate.getValue().format(df);
     String toDate = bToDate.getValue().format(df);
     String s = "\0";
@@ -676,7 +809,10 @@ DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.US);
 
 
   public void handleComboBox(ActionEvent event) {
+    ArrayList<ChronoLocalDate> fredlist = new ArrayList<ChronoLocalDate>();
 		String roomID= roomSel.getValue();
+    ArrayList<ChronoLocalDate> blist = new ArrayList<ChronoLocalDate>();
+    DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.US);
 		String roomDetailQuery ="SELECT * FROM room where room_number="+roomID;
 		try {
 			Statement statement = (handler.getLink()).createStatement();
@@ -694,11 +830,161 @@ DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.US);
 
       String other = RoomDetailList.getString("other_info");
 			otherinfolabel.setText(other);
+      String bookIdQuery = "SELECT * FROM bookings WHERE Room = ?";
+      PreparedStatement stat = handler.getLink().prepareStatement(bookIdQuery);
+      stat = handler.getLink().prepareStatement(bookIdQuery);
+      stat.setString(1, roomID);
+        ResultSet BookIDList= stat.executeQuery();
+        while (BookIDList.next()) {
+          int from = doy(BookIDList.getString("bFrom"));
+          int to = doy(BookIDList.getString("bTo"));
+          Boolean done = false;
+          LocalDate i = LocalDate.parse(BookIDList.getString("bFrom"), df);
+          Calendar c = Calendar.getInstance();
+          String[] splitter = BookIDList.getString("bFrom").split("-");
+          if (Integer.valueOf(splitter[1])<9){
+            String temp = "0"+splitter[1];
+            splitter[1] = temp;
+          }
+          if (Integer.valueOf(splitter[2])<9){
+            String temp = "0"+splitter[2];
+            splitter[2] = temp;
+          }
+          c.set(Integer.valueOf(splitter[0]), Integer.valueOf(splitter[1]), Integer.valueOf(splitter[2]));
+          while(!fredlist.contains(LocalDate.parse(BookIDList.getString("bTo"), df))){
+          c.add(Calendar.DATE, 1);
+          String temp = "\0";
+          String prMonth = String.valueOf(c.get(Calendar.MONTH));
+          String prDay=String.valueOf(c.get(Calendar.DATE));
+          if(Integer.valueOf(c.get(Calendar.MONTH))<=9){
+          temp = "0" + c.get(Calendar.MONTH);
+          prMonth = temp;
+          }
+          if(Integer.valueOf(c.get(Calendar.DATE))<=9){
+            temp = "0" + c.get(Calendar.DATE);
+            prDay = temp;
+            }
+          if(Integer.valueOf(c.get(Calendar.MONTH))==0)
+          prMonth = "01";
+          temp = c.get(Calendar.YEAR)+"-"+prMonth+"-"+prDay;
+          i = LocalDate.parse(temp, df); 
+          fredlist.add(i);
+          fredlist.add(i.minusDays(1));
+          }
+        }
+        System.out.println(blist);
+        roombook.setDayCellFactory(d ->
+           new DateCell() {
+               @Override public void updateItem(LocalDate item, boolean empty) {
+                   super.updateItem(item, empty);
+                   if(fredlist.contains(item))
+                   setStyle("-fx-background-color: #ffc0cb;");
+                   else setStyle("-fx-background-color: #FFFFFF;");
+               }}); 
 
 			}
 	}catch (Exception e) {
 		e.printStackTrace();
 		}
+	}
+
+  public void handleFilterChoiceChanged(ActionEvent event) {
+    if(obookingfilter.getValue().equals("Date")){
+      odatefilter.setVisible(true);
+      obookingpaychoice.setVisible(false);
+      obookingfiltersearch.setVisible(false);
+    } else if(obookingfilter.getValue().equals("Payment status")){
+      odatefilter.setVisible(false);
+      obookingfiltersearch.setVisible(false);
+      obookingpaychoice.setVisible(true);
+    } else {
+      odatefilter.setVisible(false);
+      obookingfiltersearch.setVisible(true);
+      obookingpaychoice.setVisible(false);
+    }
+	}
+
+  public void handleRoomChosen(ActionEvent event){
+    if (bBookingCustomer.getValue()!=null){
+      triggerBookingDates();
+    }
+  }
+
+  public void handlebFromDate(ActionEvent event){
+    bToDate.setDisable(false);
+  }
+
+  public void handleCustomerChosen(ActionEvent event){
+    if (bRoomSel.getValue()!=null){
+      triggerBookingDates();
+    }
+  }
+
+  public void handleBookingDateFilter(ActionEvent event) {
+    try{
+    DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.US);
+    String select = odatefilter.getValue().format(df);
+      ebookinglist.getItems().clear();
+      String bookIdQuery = "SELECT * FROM bookings";
+      PreparedStatement stat = handler.getLink().prepareStatement(bookIdQuery);
+      stat = handler.getLink().prepareStatement(bookIdQuery);
+        ResultSet BookIDList= stat.executeQuery();
+        Statement statement = (handler.getLink()).createStatement();
+        while (BookIDList.next()) {
+          String name = "\0";
+          String customerNameQuery = "SELECT firstname, lastname FROM customer WHERE ID ='"+BookIDList.getString("Customer")+"'";
+          ResultSet Customers= statement.executeQuery(customerNameQuery);
+          while(Customers.next()){
+            name = Customers.getString("firstname") + " " + Customers.getString("lastname");
+          }
+          int current = doy(select);
+          String entry = BookIDList.getString("ID") + ". " + "Room " + BookIDList.getString("Room") + ", " + name + ", " + BookIDList.getString("bFrom") + " -> " + BookIDList.getString("bTo");
+          if((current>=doy(BookIDList.getString("bFrom"))) && (current<=doy(BookIDList.getString("bTo")))){
+          ebookinglist.getItems().add(entry);  
+          }
+        } 
+      } catch(Exception e){
+
+      }
+
+	}
+
+  public void handleBPayChoice(ActionEvent event) {
+    try{
+    String bookIdQuery = "\0";
+    PreparedStatement stat = handler.getLink().prepareStatement(bookIdQuery);
+    ebookinglist.getItems().clear();
+    String crit = "\0";
+      if(obookingpaychoice.getValue().equals("Paid")){
+        crit = "1";
+        bookIdQuery = "SELECT * FROM bookings WHERE PAID LIKE ?";
+        stat = handler.getLink().prepareStatement(bookIdQuery);
+        stat.setString(1, crit);
+      } else if(obookingpaychoice.getValue().equals("Unpaid")){
+        crit = "0";
+        bookIdQuery = "SELECT * FROM bookings WHERE PAID LIKE ?";
+        stat = handler.getLink().prepareStatement(bookIdQuery);
+        stat.setString(1, crit);
+      } else {
+        bookIdQuery = "SELECT * FROM bookings";
+        stat = handler.getLink().prepareStatement(bookIdQuery);
+      }
+    System.out.println(crit);
+    ResultSet BookIDList= stat.executeQuery();
+    Statement statement = (handler.getLink()).createStatement();
+    while (BookIDList.next()) {
+      String name = "\0";
+      String customerNameQuery = "SELECT firstname, lastname FROM customer WHERE ID ='"+BookIDList.getString("Customer")+"'";
+      ResultSet Customers= statement.executeQuery(customerNameQuery);
+      while(Customers.next()){
+        name = Customers.getString("firstname") + " " + Customers.getString("lastname");
+      }
+      String entry = BookIDList.getString("ID") + ". " + "Room " + BookIDList.getString("Room") + ", " + name + ", " + BookIDList.getString("bFrom") + " -> " + BookIDList.getString("bTo");
+      ebookinglist.getItems().add(entry);  
+    }
+  } catch(Exception e){
+    System.out.println(e);
+  }
 	}
 
   public void handleRoomComboBox(ActionEvent event) {
@@ -729,6 +1015,66 @@ DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.US);
 	}catch (Exception e) {
 		e.printStackTrace();
 		}
+	}
+
+  public void handleBookingFilterKey(ActionEvent event) {
+    String bookIdQuery = "\0";
+    try{
+    PreparedStatement stat = handler.getLink().prepareStatement(bookIdQuery);
+    if(obookingfilter.getValue().equals("Room Number")){
+      ebookinglist.getItems().clear();
+      if(obookingfiltersearch.getText().length()>0){
+        System.out.println("ui");
+      bookIdQuery = "SELECT * FROM bookings WHERE Room LIKE ?";
+      stat = handler.getLink().prepareStatement(bookIdQuery);
+      stat.setString(1, obookingfiltersearch.getText());
+      } else {
+        System.out.println("e");
+      bookIdQuery = "SELECT * FROM bookings";
+      stat = handler.getLink().prepareStatement(bookIdQuery);
+      }
+        ResultSet BookIDList= stat.executeQuery();
+        Statement statement = (handler.getLink()).createStatement();
+        while (BookIDList.next()) {
+          String name = "\0";
+          String customerNameQuery = "SELECT firstname, lastname FROM customer WHERE ID ='"+BookIDList.getString("Customer")+"'";
+          ResultSet Customers= statement.executeQuery(customerNameQuery);
+          while(Customers.next()){
+            name = Customers.getString("firstname") + " " + Customers.getString("lastname");
+          }
+          String entry = BookIDList.getString("ID") + ". " + "Room " + BookIDList.getString("Room") + ", " + name + ", " + BookIDList.getString("bFrom") + " -> " + BookIDList.getString("bTo");
+          ebookinglist.getItems().add(entry);  
+        }
+
+    } else if(obookingfilter.getValue().equals("Payment status")){
+
+    }  else if(obookingfilter.getValue().equals("Customer")){
+      ebookinglist.getItems().clear();
+    bookIdQuery = "SELECT * FROM bookings";
+    stat = handler.getLink().prepareStatement(bookIdQuery);
+      ResultSet BookIDList= stat.executeQuery();
+      Statement statement = (handler.getLink()).createStatement();
+      while (BookIDList.next()) {
+        String name = "\0";
+        String customerNameQuery = "SELECT firstname, lastname FROM customer WHERE ID ='"+BookIDList.getString("Customer")+"'";
+        ResultSet Customers= statement.executeQuery(customerNameQuery);
+        while(Customers.next()){
+          name = Customers.getString("firstname") + " " + Customers.getString("lastname");
+        }
+        String entry = BookIDList.getString("ID") + ". " + "Room " + BookIDList.getString("Room") + ", " + name + ", " + BookIDList.getString("bFrom") + " -> " + BookIDList.getString("bTo");
+        if(obookingfiltersearch.getText().length()>0){
+        if (name.toLowerCase().contains(obookingfiltersearch.getText().toLowerCase())){
+        ebookinglist.getItems().add(entry);  
+        }
+        } else {
+        ebookinglist.getItems().add(entry);  
+        }
+      }
+    }
+  } catch (Exception e){
+    System.out.println(e);
+
+  }
 	}
 
     public void handleBookingView(MouseEvent event) {

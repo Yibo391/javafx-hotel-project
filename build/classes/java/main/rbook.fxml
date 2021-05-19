@@ -14,7 +14,7 @@
    <children>
       <AnchorPane prefHeight="200.0" prefWidth="200.0">
          <children>
-            <ComboBox id="rs" fx:id="bRoomSel" layoutX="176.0" layoutY="125.0" prefWidth="150.0" promptText="Select room no.">
+            <ComboBox id="rs" fx:id="bRoomSel" layoutX="176.0" layoutY="125.0" onAction="#handleRoomChosen" prefWidth="150.0" promptText="Select room no.">
           <items>
               <FXCollections fx:factory="observableArrayList">
         </FXCollections>
@@ -25,7 +25,7 @@
                   <Image url="@label.png" />
                </image>
             </ImageView>
-            <ComboBox id="rcust" fx:id="bBookingCustomer" layoutX="176.0" layoutY="161.0" prefWidth="150.0" promptText="Select customer">
+            <ComboBox id="rcust" fx:id="bBookingCustomer" layoutX="176.0" layoutY="161.0" onAction="#handleCustomerChosen" prefWidth="150.0" promptText="Select customer">
                <items>
                   <FXCollections fx:factory="observableArrayList" />
                </items>
@@ -47,7 +47,7 @@
             <Font name="Arial Narrow Bold" size="26.0" />
          </font>
       </Button>
-      <DatePicker fx:id="bFromDate" layoutX="55.0" layoutY="278.0" />
-      <DatePicker fx:id="bToDate" layoutX="271.0" layoutY="278.0" />
+      <DatePicker fx:id="bFromDate" disable="true" layoutX="55.0" layoutY="278.0" onAction="#handlebFromDate" />
+      <DatePicker fx:id="bToDate" disable="true" layoutX="271.0" layoutY="278.0" />
    </children>
 </AnchorPane>
