@@ -59,7 +59,7 @@
                   <Font name="Arial Black" size="27.0" />
                </font>
             </Button>
-            <Button layoutY="368.0" mnemonicParsing="false" prefHeight="68.0" prefWidth="281.0" stylesheets="@button.css" text="Edit personnel" textFill="#231d5b">
+            <Button layoutY="368.0" mnemonicParsing="false" onAction="#handleEditPersonnelButton" prefHeight="68.0" prefWidth="281.0" stylesheets="@button.css" text="Edit personnel" textFill="#231d5b">
                <font>
                   <Font name="Arial Black" size="27.0" />
                </font>

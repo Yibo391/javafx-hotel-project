@@ -69,6 +69,10 @@ public class Controller
   
   static String username = "";
 
+  static String bookEdit = "";
+
+  static String role = "";
+
   @FXML
   public ComboBox<String> roomSel;
 
@@ -87,8 +91,14 @@ public class Controller
 	@FXML
 	public Label bookedtoLevel;
 
+  @FXML
+  public TextField perseditpassbar;
+
 	@FXML
 	public Label otherinfolabel;
+
+  @FXML
+  public ChoiceBox<String> perschoicebox;
 
   @FXML
   public Label bRoomLabel;
@@ -104,6 +114,9 @@ public class Controller
 
   @FXML
   public DatePicker odatefilter;
+
+  @FXML
+  public TextField persedituserbar;
 
   @FXML
   public ChoiceBox<String> obookingpaychoice;
@@ -125,6 +138,9 @@ public class Controller
 
   @FXML
   public Slider roomsize;
+
+  @FXML
+  public ChoiceBox<String> persrolebox;
 
   @FXML
   public TextField ncfirst;
@@ -173,6 +189,9 @@ public class Controller
 
   @FXML
   public ListView<String> ebookinglist;
+
+  @FXML
+  public ChoiceBox<String> persroleeditbox;
 
   @FXML
   public Slider eroomsize;
@@ -312,10 +331,12 @@ bToDate.setDayCellFactory(d ->
     try{
     if((Validator.checkLogin(initUI(usertext, passtext))).equals("Staff")){
       username = usertext.getText();
+      role = "Staff";
       StaffUi ui = new StaffUi();
       ui.start(launcher.stage);
     } else if((Validator.checkLogin(initUI(usertext, passtext))).equals("Admin")){
       username = usertext.getText();
+      role = "Admin";
       AdminUi ui = new AdminUi();
       ui.start(launcher.stage);
     }
@@ -550,6 +571,28 @@ bToDate.setDayCellFactory(d ->
     eprof.start(new Stage());
   }
 
+  @FXML protected void handleEditBookingButton(ActionEvent event) throws Exception {
+    ObservableList<String> selectedIndices = ebookinglist.getSelectionModel().getSelectedItems();
+    String s = "\0";
+    boolean paid = false;
+    for(String o : selectedIndices){
+      s = o;
+    }
+    String [] split = s.split(" ");
+    s = split[0].replaceAll("\\D+","");
+    bookEdit = s;
+    if(s.length()>0){
+    EditBookingDialog ebook = new EditBookingDialog();
+    ebook.start(new Stage());
+    } else {
+      Alert alert = new Alert(AlertType.ERROR);
+      alert.setTitle("Booking Editor Error");
+      alert.setHeaderText(null);
+      alert.setContentText("You have not selected a booking.");
+      alert.showAndWait(); 
+    }
+  }
+
   @FXML protected void handleAddCustomerButton(ActionEvent event) throws Exception {
     NewCustomerDialog nc = new NewCustomerDialog();
     nc.start(new Stage());
@@ -719,7 +762,7 @@ bToDate.setDayCellFactory(d ->
   }
 
   @FXML protected void handleEditPApplyButton(ActionEvent event) throws Exception {
-    String[] list = {edituserbar.getText(), editpassbar.getText()};
+    String[] list = {edituserbar.getText(), editpassbar.getText(), getRole(), getUsername()};
     if((edituserbar.getText().length())>=4){
       if((editpassbar.getText().length())>=6){
     try{
@@ -908,6 +951,58 @@ bToDate.setDayCellFactory(d ->
     if (bBookingCustomer.getValue()!=null){
       triggerBookingDates();
     }
+  }
+
+  public void handleEditBookingApplyButton(ActionEvent event){
+  }
+
+  public void handlePersonnelChosen(ActionEvent event){
+    System.out.println(perschoicebox.getValue());
+    persedituserbar.setText(perschoicebox.getValue());
+
+  }
+
+  public void handleEditPersApplyButton(ActionEvent event){
+    String str;
+      if((perseditpassbar.getText().length())>=6){
+    try{
+    String[] list = {persedituserbar.getText(), perseditpassbar.getText(), persrolebox.getValue(), persedituserbar.getText()};
+    if(handler.update("user", list))
+    {
+      Alert alert = new Alert(AlertType.INFORMATION);
+      alert.setTitle("User Editing Result");
+      alert.setHeaderText(null);
+      alert.setContentText("User " + perschoicebox.getValue() + " has been edited succesfully.");
+      alert.showAndWait();
+      
+
+    } else {
+      Alert alert = new Alert(AlertType.ERROR);
+      alert.setTitle("User Editing Error");
+      alert.setHeaderText(null);
+      alert.setContentText("Edit failed. Make sure you've completed all the fields.");
+      alert.showAndWait();
+    }
+   } catch(Exception e){
+    Alert alert = new Alert(AlertType.ERROR);
+    alert.setTitle("User Editing Error");
+    alert.setHeaderText(null);
+    alert.setContentText("SQL Fault.");
+    alert.showAndWait();
+   }
+  } else {
+    Alert alert = new Alert(AlertType.ERROR);
+    alert.setTitle("User Editing Error");
+    alert.setHeaderText(null);
+    alert.setContentText("The password must be at least 6 characters long.");
+    alert.showAndWait();
+  }
+  }
+
+  public void handleEditPersonnelButton(ActionEvent event) throws Exception{
+    EditPersonnelDialog editpr = new EditPersonnelDialog();
+    editpr.start(new Stage());
+
   }
 
   public void handlebFromDate(ActionEvent event){
@@ -1121,6 +1216,14 @@ bToDate.setDayCellFactory(d ->
 
   public static String getUsername(){
     return username;
+  }
+
+  public static String getRole(){
+    return role;
+  }
+
+  public static String GetBookEditID(){
+    return bookEdit;
   }
 
 
