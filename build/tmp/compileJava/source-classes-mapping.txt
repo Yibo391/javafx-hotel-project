@@ -2,30 +2,36 @@ hotelproject/UserUi.java
  hotelproject.UserUi
 hotelproject/LoginDialog.java
  hotelproject.LoginDialog
-hotelproject/Validator.java
- hotelproject.Validator
-hotelproject/NewRoomDialog.java
- hotelproject.NewRoomDialog
+hotelproject/SQLHandler.java
+ hotelproject.SQLHandler
+hotelproject/RoomDetailDialog.java
+ hotelproject.RoomDetailDialog
 hotelproject/NewUserDialog.java
  hotelproject.NewUserDialog
-hotelproject/module-info.java
- module-info
-hotelproject/AdminUi.java
- hotelproject.AdminUi
+hotelproject/Validator.java
+ hotelproject.Validator
+hotelproject/BookingDetailDialog.java
+ hotelproject.BookingDetailDialog
 hotelproject/StaffUi.java
  hotelproject.StaffUi
 hotelproject/NewCustomerDialog.java
  hotelproject.NewCustomerDialog
+hotelproject/EditPersonnelDialog.java
+ hotelproject.EditPersonnelDialog
+hotelproject/NewRoomDialog.java
+ hotelproject.NewRoomDialog
+hotelproject/AdminUi.java
+ hotelproject.AdminUi
+hotelproject/NewBookingDialog.java
+ hotelproject.NewBookingDialog
+hotelproject/module-info.java
+ module-info
+hotelproject/EditRoomDialog.java
+ hotelproject.EditRoomDialog
 hotelproject/EditBookingDialog.java
  hotelproject.EditBookingDialog
 hotelproject/launcher.java
  hotelproject.launcher
-hotelproject/NewBookingDialog.java
- hotelproject.NewBookingDialog
-hotelproject/EditRoomDialog.java
- hotelproject.EditRoomDialog
-hotelproject/SQLHandler.java
- hotelproject.SQLHandler
 hotelproject/Controller.java
  hotelproject.Controller
  hotelproject.Controller$1
@@ -33,9 +39,3 @@ hotelproject/Controller.java
  hotelproject.Controller$3
 hotelproject/EditProfileDialog.java
  hotelproject.EditProfileDialog
-hotelproject/BookingDetailDialog.java
- hotelproject.BookingDetailDialog
-hotelproject/RoomDetailDialog.java
- hotelproject.RoomDetailDialog
-hotelproject/EditPersonnelDialog.java
- hotelproject.EditPersonnelDialog

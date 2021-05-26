@@ -956,11 +956,17 @@ bToDate.setDayCellFactory(d ->
   public void handleEditBookingApplyButton(ActionEvent event){
   }
 
-  public void handlePersonnelChosen(ActionEvent event){
+  public void handlePersonnelChosen(ActionEvent event) throws Exception{
     System.out.println(perschoicebox.getValue());
     persedituserbar.setText(perschoicebox.getValue());
-
+    String sql = "SELECT * from user WHERE account = ?";
+    PreparedStatement stat = handler.getLink().prepareStatement(sql);
+    stat.setString(1, perschoicebox.getValue());
+        ResultSet lst= stat.executeQuery();
+        while (lst.next()) {
+          persrolebox.setValue(lst.getString("identification"));
   }
+}
 
   public void handleEditPersApplyButton(ActionEvent event){
     String str;
