@@ -76,8 +76,20 @@ public class EditBookingDialog extends Application {
         eBookCust.setValue(name);
         eBookFrom.setValue(LocalDate.parse(results.getString("bFrom"), df));
         eBookTo.setValue(LocalDate.parse(results.getString("bTo"), df));
-
 			}
+      sql = "SELECT * from customer";
+      stmt = handler.getLink().prepareStatement(sql);
+      ResultSet results2 = stmt.executeQuery();
+      while (results2.next()) {
+        String name = results2.getString("ID") + ". " + results2.getString("firstname") + " " + results2.getString("lastname");
+        eBookCust.getItems().add(name);
+      }
+      sql = "SELECT * from room";
+      stmt = handler.getLink().prepareStatement(sql);
+      ResultSet results3 = stmt.executeQuery();
+      while (results3.next()) {
+        eBookNo.getItems().add(results3.getString("room_number"));
+      }
 	} catch (Exception e) {
 		System.out.println(e);
 		}

@@ -215,6 +215,18 @@ public class Controller
   public DatePicker bToDate;
 
   @FXML
+  public DatePicker eBookFrom;
+
+  @FXML
+  public DatePicker eBookTo;
+
+  @FXML
+  public ComboBox<String> eBookNo;
+
+  @FXML
+  public ComboBox<String> eBookCust;
+
+  @FXML
   public DatePicker roombook;
 
   @FXML
@@ -954,6 +966,46 @@ bToDate.setDayCellFactory(d ->
   }
 
   public void handleEditBookingApplyButton(ActionEvent event){
+    DatePicker mrgRqstDate = new DatePicker();
+    DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.US);
+    String fromDate = eBookFrom.getValue().format(df);
+    String toDate = eBookTo.getValue().format(df);
+    String s = "\0";
+    try{
+    s = eBookCust.getValue().replaceAll("\\D+","");
+    } catch (Exception e){
+      Alert alert = new Alert(AlertType.ERROR);
+      alert.setTitle("Booking Editor Error");
+      alert.setHeaderText(null);
+      alert.setContentText("Please select a customer to book for.");
+      alert.showAndWait();
+    }
+    String[] list = {eBookNo.getValue(), fromDate, toDate, s, bookEdit};
+    try{
+    if(handler.update("booking", list))
+    {
+      Alert alert = new Alert(AlertType.INFORMATION);
+      alert.setTitle("Booking Editor Result");
+      alert.setHeaderText(null);
+      alert.setContentText("Booking has been succesfully edited.");
+      alert.showAndWait();
+
+
+    } else {
+      Alert alert = new Alert(AlertType.ERROR);
+      alert.setTitle("Booking Editor Error");
+      alert.setHeaderText(null);
+      alert.setContentText("Edit failed. Make sure you've completed all the fields.");
+      alert.showAndWait();
+    }
+   } catch(Exception e){
+    Alert alert = new Alert(AlertType.ERROR);
+    alert.setTitle("Booking Editor Error");
+    alert.setHeaderText(null);
+    alert.setContentText("SQL Fault.");
+    System.out.println(e);
+    alert.showAndWait();
+   }
   }
 
   public void handlePersonnelChosen(ActionEvent event) throws Exception{
@@ -1200,12 +1252,7 @@ bToDate.setDayCellFactory(d ->
         if(CustomerName.next()){
           name = CustomerName.getString("firstname") + " " + CustomerName.getString("lastname");
         }
-        bRoomLabel.setText( RoomDetailList.getString("Room"));
-			
-        bFromLabel.setText(RoomDetailList.getString("bFrom"));
-        
-        bToLabel.setText(RoomDetailList.getString("bTo"));
-  
+        bRoomLabel.setText( RoomDetailList.getString("Room")); 
         bCustomerLabel.setText(name);
         System.out.println(RoomDetailList.getString("Paid"));
         if(RoomDetailList.getString("Paid").equals("0")){
