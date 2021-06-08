@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.collections.FXCollections?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="428.0" prefWidth="500.0" styleClass="background" stylesheets="@pbg.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hotelproject.Controller">
+   <children>
+      <AnchorPane prefHeight="200.0" prefWidth="200.0">
+         <children>
+            <ImageView fitHeight="106.0" fitWidth="315.0" layoutX="-28.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@label.png" />
+               </image>
+            </ImageView>
+            <DatePicker fx:id="odatefilter" layoutX="232.0" layoutY="143.0" onAction="#handleBookingDateFilter" visible="false" />
+            <ChoiceBox fx:id="obookingpaychoice" layoutX="232.0" layoutY="143.0" onAction="#handleBPayChoice" prefWidth="150.0" visible="false">
+    <items>
+        <FXCollections fx:factory="observableArrayList">
+            <String fx:value="Paid" />
+            <String fx:value="Unpaid" />
+        </FXCollections>
+    </items>
+</ChoiceBox>
+            <Label id="ebooklabel" layoutX="195.0" layoutY="132.0" text="Booking ???" textFill="#11003c">
+               <font>
+                  <Font name="Arial" size="20.0" />
+               </font>
+            </Label>
+            <Text fill="#000340" layoutX="281.0" layoutY="75.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Booking Editor">
+               <font>
+                  <Font name="Arial" size="27.0" />
+               </font>
+            </Text>
+            <ComboBox id="eBookCust" fx:id="eBookCust" layoutX="165.0" layoutY="176.0" prefWidth="150.0">
+         <items>
+              <FXCollections fx:factory="observableArrayList">
+        </FXCollections>
+          </items>
+</ComboBox>
+            <ComboBox id="eBookNo" fx:id="eBookNo" layoutX="165.0" layoutY="224.0" prefWidth="150.0">
+         <items>
+              <FXCollections fx:factory="observableArrayList">
+        </FXCollections>
+          </items>
+</ComboBox>
+         </children>
+      </AnchorPane>
+      <DatePicker id="eBookFrom" fx:id="eBookFrom" layoutX="33.0" layoutY="303.0" />
+      <Text fill="#000340" layoutX="68.0" layoutY="291.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Book from">
+         <font>
+            <Font name="Arial" size="23.0" />
+         </font>
+      </Text>
+      <DatePicker id="eBookTo" fx:id="eBookTo" layoutX="294.0" layoutY="303.0" />
+      <Text fill="#000340" layoutX="342.0" layoutY="291.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Book to">
+         <font>
+            <Font name="Arial" size="23.0" />
+         </font>
+      </Text>
+      <Button layoutX="203.0" layoutY="366.0" mnemonicParsing="false" onAction="#handleEditBookingApplyButton" stylesheets="@button.css" text="Apply">
+         <font>
+            <Font name="Arial Narrow Bold" size="26.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>

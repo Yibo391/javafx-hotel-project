@@ -143,13 +143,14 @@ import java.util.Map;
       Connection conn;
       System.out.println(list);
       if(table.equals("user")){
-        String sql = "UPDATE user SET account = ?, password = ? WHERE account = ?";
+        String sql = "UPDATE user SET account = ?, password = ?, identification = ? WHERE account = ?";
         try{
             conn = DriverManager.getConnection("jdbc:mysql://localhost/hoteldb?user=root&password=root&useSSL=false");
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1,list[0]);
             stmt.setString(2,list[1]);
-            stmt.setString(3,Controller.getUsername());
+            stmt.setString(3,list[2]);
+            stmt.setString(4,list[3]);
             stmt.executeUpdate();
             if(!conn.getAutoCommit()){
                 conn.commit();
@@ -193,6 +194,28 @@ import java.util.Map;
             conn = DriverManager.getConnection("jdbc:mysql://localhost/hoteldb?user=root&password=root&useSSL=false");
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1,list[0]);
+            stmt.executeUpdate();
+            if(!conn.getAutoCommit()){
+                conn.commit();
+            }
+        return true;
+
+        } catch(SQLException e){
+          System.out.println(e);
+            return false;
+        }
+      } else if(table.equals("booking")){
+        String sql = "UPDATE bookings SET Room = ?, bFrom = ?, bTo = ?, Customer = ? WHERE ID = ?";
+        try{
+            conn = DriverManager.getConnection("jdbc:mysql://localhost/hoteldb?user=root&password=root&useSSL=false");
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            System.out.println(list);
+            stmt.setString(1,list[0]);
+            stmt.setString(2,list[1]);
+            stmt.setString(3,list[2]);
+            stmt.setString(4,list[3]);
+            stmt.setString(5,list[4]);
+            System.out.println(stmt);
             stmt.executeUpdate();
             if(!conn.getAutoCommit()){
                 conn.commit();

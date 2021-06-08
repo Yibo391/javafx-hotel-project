@@ -84,7 +84,7 @@
                </font>
             </Text>
             <DatePicker fx:id="odatefilter" layoutX="232.0" layoutY="143.0" onAction="#handleBookingDateFilter" visible="false" />
-            <ChoiceBox fx:id="obookingpaychoice" layoutX="232.0" onAction="#handleBPayChoice" layoutY="143.0" prefWidth="150.0" visible="false">
+            <ChoiceBox fx:id="obookingpaychoice" layoutX="232.0" layoutY="143.0" onAction="#handleBPayChoice" prefWidth="150.0" visible="false">
     <items>
         <FXCollections fx:factory="observableArrayList">
             <String fx:value="Paid" />
@@ -105,11 +105,10 @@
             <Font name="Arial Black" size="18.0" />
          </font>
       </Button>
-      <DatePicker layoutX="163.0" layoutY="544.0" />
-      <Text fill="#000340" layoutX="171.0" layoutY="538.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Booking timespan">
+      <Button layoutX="107.0" layoutY="348.0" mnemonicParsing="false" onAction="#handleEditBookingButton" prefHeight="57.0" prefWidth="287.0" stylesheets="@button.css" text="Edit booking" textFill="#231d5b">
          <font>
-            <Font name="Arial" size="20.0" />
+            <Font name="Arial Black" size="18.0" />
          </font>
-      </Text>
+      </Button>
    </children>
 </AnchorPane>

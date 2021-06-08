@@ -2,22 +2,24 @@ hotelproject/UserUi.java
  hotelproject.UserUi
 hotelproject/LoginDialog.java
  hotelproject.LoginDialog
+hotelproject/module-info.java
+ module-info
 hotelproject/AdminUi.java
  hotelproject.AdminUi
-hotelproject/launcher.java
- hotelproject.launcher
 hotelproject/NewUserDialog.java
  hotelproject.NewUserDialog
 hotelproject/Validator.java
  hotelproject.Validator
-hotelproject/module-info.java
- module-info
+hotelproject/launcher.java
+ hotelproject.launcher
 hotelproject/StaffUi.java
  hotelproject.StaffUi
 hotelproject/NewCustomerDialog.java
  hotelproject.NewCustomerDialog
 hotelproject/NewRoomDialog.java
  hotelproject.NewRoomDialog
+hotelproject/EditBookingDialog.java
+ hotelproject.EditBookingDialog
 hotelproject/NewBookingDialog.java
  hotelproject.NewBookingDialog
 hotelproject/EditRoomDialog.java
@@ -35,3 +37,5 @@ hotelproject/BookingDetailDialog.java
  hotelproject.BookingDetailDialog
 hotelproject/RoomDetailDialog.java
  hotelproject.RoomDetailDialog
+hotelproject/EditPersonnelDialog.java
+ hotelproject.EditPersonnelDialog
